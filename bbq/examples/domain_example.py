@@ -1,21 +1,10 @@
-"""This is a test file for extensions and helper functions for the pyRibs
-MAP-Elites framework.
-
--- Features
-    - Configuration by a yaml file
-    - A custom grid class that export to numpy
-    - A logging class for frequent use cases
-"""
-
 import numpy as np
-from humanfriendly import format_timespan
 import fire
-
 from matplotlib import pyplot as plt
 
 # Test Domain
 import math
-from ribs_helpers import RibsDomain # Base class for ribs domains
+from bbq.domains._domain import RibsDomain
 
 class Rastrigin(RibsDomain):
     def __init__(self, n_dof=10, n_desc=2, x_scale=[-5,5]):

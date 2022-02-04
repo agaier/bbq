@@ -8,21 +8,23 @@ from ribs.emitters import IsoLineEmitter
 from ribs.optimizers import Optimizer
 
 # PyRibs Helpers
-from ribs_helpers import (create_dask_client, create_emitter, dask_eval,
-                          npGridArchive)
+from bbq.parallel import create_dask_client, dask_eval
+from bbq.archives import GridArchive
+from bbq.create_emitter import create_emitter
+#from ribs.archives import GridArchive
 
 
 def map_elites(d, p, logger, 
-                    emitter_type=IsoLineEmitter, archive_type=npGridArchive):
+                    emitter_type=IsoLineEmitter, archive_type=GridArchive):
     # Setup
     archive = archive_type(p['grid_res'], p['desc_bounds']) # stores solutions
     emitter = create_emitter(emitter_type, archive, p)      # creates solutions
-    opt = Optimizer(archive, emitter)  # the MAP-Elites optimizer
+    opt = Optimizer(archive, emitter)                       # MAP-Elites
     client = create_dask_client(p['n_workers']) 
 
     # Bootstrap with initial solutions
     start_xx = d.init(p['n_init'])
-    objs, descs, metas = dask_eval(start_xx, d.batch_eval, client)
+    objs, descs, metas = dask_eval(start_xx, d.evaluate, client)
     archive.add_batch(start_xx, objs, descs, metas)
 
     # - Main Loop -------------------------------------------------------------#
@@ -31,7 +33,7 @@ def map_elites(d, p, logger,
         itr_start = time.time()       
         # - MAP-ELITES --------------------------------------------------------#
         inds = opt.ask()
-        objs, bcs, pheno = dask_eval(inds, d.batch_eval, client) 
+        objs, bcs, pheno = dask_eval(inds, d.evaluate, client) 
         opt.tell(objs, bcs, pheno)
 
         # - Logging -----------------------------------------------------------#
