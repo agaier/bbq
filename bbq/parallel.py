@@ -1,20 +1,22 @@
 from dask.distributed import Client, LocalCluster
 import numpy as np
 
-def dask_eval(xx, batch_eval, client, serial=False):
-    ''' Performs parallel evaluation across dask workers'''            
+def dask_eval(xx, eval_func, client, serial=False):
+    ''' Performs parallel evaluation across dask workers''' 
+    objs, descs, phenos = [], [], []           
     if serial:
-        return batch_eval(xx)
-
-    objs, descs, phenos = [], [], []
-    futures = client.map(lambda x: batch_eval(x), xx)
-    results = client.gather(futures)
-
-    # Organize results
-    for obj, desc, pheno in results:
-        objs.append(obj)
-        descs.append(desc)
-        phenos.append(pheno)
+        for x in xx:
+            obj, desc, pheno = eval_func(x)
+            objs.append(obj)
+            descs.append(desc)
+            phenos.append(pheno)
+    else:
+        futures = client.map(lambda x: eval_func(x), xx)
+        results = client.gather(futures)
+        for obj, desc, pheno in results:
+            objs.append(obj)
+            descs.append(desc)
+            phenos.append(pheno)
 
     objs = np.hstack(objs)
     descs = np.vstack(descs)   
