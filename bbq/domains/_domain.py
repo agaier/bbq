@@ -3,10 +3,9 @@ import inspect
 
 # - Base Domains --------------------------------------------------------------#
 class RibsDomain():
-    def __init__(self, n_dof, n_desc, x_scale):
-        self.n_dof = n_dof
-        self.n_desc = n_desc
-        self.x_scale = x_scale     
+    def __init__(self, p):
+        self.n_dof  = p['n_dof']
+        self.n_desc = len(p['desc_bounds'])
 
     def evaluate(self, x):
             """ Evaluates a single individual, giving an objective and descriptor
@@ -26,8 +25,11 @@ class RibsDomain():
     def express(self, xx):
         """ This function turns the raw parameter values that the optimization
         algorithm works on (the genotype) into something that can be properly
-        evaluated (the phenotype) """
-        return scale(xx, self.x_scale)
+        evaluated (the phenotype) 
+        
+        If not reimplemented in domain pass on genotype as phenotype.
+        """
+        return xx
 
     def _fitness(self, x):        
         raise NotImplementedError   
@@ -47,6 +49,14 @@ class RibsDomain():
         initial_solutions = np.random.rand(n_solutions, self.n_dof)
         return initial_solutions        
 
+    def prep_eval(self, p):
+        """ Prepare evaluation if necessary: 
+            - start up dask clients
+            - set up file structures for external evaluators
+            - or nothing, the results here will be used by batch eval
+        """
+        return None
+
     # def batch_eval(self, xx):
     #     ''' Return objective and descriptor value of batch of solutions '''
     #     if is_class(xx):
@@ -63,12 +73,6 @@ class RibsDomain():
     #     return objs, descs, phenos
 
 # - Utility Functions ---------------------------------------------------------#
-def scale(x, param_scale):
-    """ Scale each column of matrix by mins and maxes defined in vectors"""
-    v_min, v_max = param_scale[0], param_scale[1]
-    v_range = v_max-v_min
-    v_scaled = (v_range * x) + v_min
-    return v_scaled    
 
 def is_class(o):
     return hasattr(o, '__dict__')
