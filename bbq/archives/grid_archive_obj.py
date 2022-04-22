@@ -152,7 +152,10 @@ class GridArchive_Obj(ArchiveBase_Obj):
 class GridArchive_Obj(GridArchive_Obj):
     """ Add Numpy explort function"""
     # TODO: export solution objects as well
-    def __init__(self, dims, ranges, seed=None, dtype=np.float64):
+    def __init__(self, p, seed=None, dtype=np.float64):
+        self.p = p
+        dims   = p['grid_res']
+        ranges = p['desc_bounds']
         super().__init__(dims, ranges, seed=seed, dtype=dtype)
 
     def as_numpy(self, include_metadata=False):

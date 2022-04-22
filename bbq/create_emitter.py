@@ -2,8 +2,8 @@ import numpy as np
 from bbq.emitters.obj_emitter import ObjEmitter
 
 # - Emitters ------------------------------------------------------------------#
-def create_emitter(emitter_choice, archive, p, obj_emitter=False):
-    if obj_emitter:
+def create_emitter(emitter_choice, archive, p):
+    if emitter_choice == ObjEmitter:
         emitters = [emitter_choice(
             archive,
             p,
