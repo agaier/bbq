@@ -32,8 +32,8 @@ def map_elites(d, p, logger,
         itr_start = time.time()       
         # - MAP-ELITES --------------------------------------------------------#
         inds = opt.ask()
-        objs, bcs, pheno = d.batch_eval(inds, evaluator) 
-        opt.tell(objs, bcs, pheno)
+        objs, bcs, meta = d.batch_eval(inds, evaluator) 
+        opt.tell(objs, bcs, meta)
 
         # - Logging -----------------------------------------------------------#
         non_logging_time += time.time() - itr_start
