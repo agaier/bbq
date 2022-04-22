@@ -15,13 +15,13 @@ from bbq.create_emitter import create_emitter
 
 def map_elites(d, p, logger, 
                     emitter_type=IsoLineEmitter, archive_type=GridArchive):
-    # Setup
+    # - Setup -----------------------------------------------------------------#
     archive = archive_type(p)                               # stores solutions
     emitter = create_emitter(emitter_type, archive, p)      # creates solutions
     opt = Optimizer(archive, emitter)                       # MAP-Elites
     evaluator = d.prep_eval(p)                              # evaluation stack
 
-    # Bootstrap with initial solutions
+    # - Bootstrap with initial solutions
     start_xx = d.init(p['n_init'])
     objs, descs, metas = d.batch_eval(start_xx, evaluator)
     archive.add_batch(start_xx, objs, descs, metas)
@@ -37,7 +37,6 @@ def map_elites(d, p, logger,
 
         # - Logging -----------------------------------------------------------#
         non_logging_time += time.time() - itr_start
-        #logger.log_metrics(archive, itr)
         logger.log_metrics(archive, itr, time=time.time() - itr_start)
 
     return archive
