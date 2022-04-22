@@ -1,5 +1,4 @@
-"""Example usage of using PyRibs framework with helper rools in ribs_helpers
-
+""" General MAP-Elites flow using BBQ 
 """
 import time
 
@@ -7,11 +6,9 @@ import time
 from ribs.emitters import IsoLineEmitter
 from ribs.optimizers import Optimizer
 
-# PyRibs Helpers
+# BBQ Helpers
 from bbq.archives import GridArchive
 from bbq.create_emitter import create_emitter
-#from ribs.archives import GridArchive
-
 
 def map_elites(d, p, logger, 
                     emitter_type=IsoLineEmitter, archive_type=GridArchive):
