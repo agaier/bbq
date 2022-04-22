@@ -28,9 +28,9 @@ def map_elites(d, p, logger,
     for itr in range(1, p['n_gens']+1):
         itr_start = time.time()       
         # - MAP-ELITES --------------------------------------------------------#
-        inds = opt.ask()
-        objs, bcs, meta = d.batch_eval(inds, evaluator) 
-        opt.tell(objs, bcs, meta)
+        inds = opt.ask()                                # Create new solutions
+        objs, bcs, meta = d.batch_eval(inds, evaluator) # Evaluate solutions
+        opt.tell(objs, bcs, meta)                       # Add to archive
 
         # - Logging -----------------------------------------------------------#
         non_logging_time += time.time() - itr_start
