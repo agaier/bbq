@@ -1,10 +1,10 @@
-name: 'rastrigin'
+exp_name: 'test'
 
 # -- Compute -- #
 n_workers: 4
 
 # -- Domain -- #
-dof: 4
+n_dof: 10
 param_bounds: [-2, 2]
 desc_bounds:
 - [-2, 2]
@@ -12,14 +12,15 @@ desc_bounds:
 desc_labels:
 - [Param 1]
 - [Param 2]
-iso_sigma: 0.1
+iso_sigma: [0.2, 0.1, 0.05, 0.025]
 
 # -- MAP-Elites -- #
-grid_res: [32, 32]
-n_init: 5
-n_gens: 50
-n_emitters: 1
-n_batch: 64
+grid_res: [20, 20]
+n_init: 100
+n_gens: 500
+n_emitters: 4
+n_batch: 25
+
 # -- Logging -- #
 print_rate: 1  # Print to console
 plot_rate: 10  # Plot graphs

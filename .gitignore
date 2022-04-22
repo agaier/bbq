@@ -1,6 +1,10 @@
 log/*
 dask-worker-space/*
 .DS_Store
+*.lock
+*.zip
+*.npy
+*/log/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

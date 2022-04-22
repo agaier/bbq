@@ -1,0 +1,15 @@
+name: example_project
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - ipython
+  - jupyter=1.0.0
+  - matplotlib=2.0.0
+  - notebook=4.4
+  - pandas=0.19
+  - pip=18.0
+  - python=3.5.3
+  - setuptools
+  - ipykernel=4.8
+  - numpy=1.12
