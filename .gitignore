@@ -1,11 +1,19 @@
-log/*
-dask-worker-space/*
 .DS_Store
+
+# Dask files
+dask-worker-space/*
 *.lock
+worker*
+
+# Data files
 *.zip
 *.npy
+
+# Log files
+log/*
 */log/*
-worker*
+*/*/log/*
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
