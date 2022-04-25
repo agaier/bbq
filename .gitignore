@@ -5,6 +5,7 @@ dask-worker-space/*
 *.zip
 *.npy
 */log/*
+worker*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

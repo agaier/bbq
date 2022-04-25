@@ -3,28 +3,21 @@ import fire
 from matplotlib import pyplot as plt
 
 # Test Domain
-from domain_example import Rastrigin
+from bbq.examples.domain import Rastrigin
 
 class RastriginInd():
     def __init__(self, genome):
         self.genome = genome
 
     def mutate(self, p):
-        iso_noise  = np.random.randn(len(self.genome))*p['iso_sigma']
+        iso_noise  = np.random.randn(len(self.genome))*p['iso_sigma'][0]
         new_genome = np.clip(self.genome + iso_noise, 0.0, 1.0)
         child = RastriginInd(new_genome)
         return child
 
-def scale(x, param_scale):
-    """ Scale each column of matrix by mins and maxes defined in vectors"""
-    v_min, v_max = param_scale[0], param_scale[1]
-    v_range = v_max-v_min
-    v_scaled = (v_range * x) + v_min
-    return v_scaled    
-
 class Rastrigin_obj(Rastrigin):
-    def __init__(self, n_dof=2, n_desc=2, x_scale=[-5,5]):
-        Rastrigin.__init__(self, n_dof, n_desc, x_scale)  
+    def __init__(self, p):
+        Rastrigin.__init__(self, p)  
 
     def express(self, xx):
         """ This function turns the raw parameter values that the optimization
@@ -33,7 +26,7 @@ class Rastrigin_obj(Rastrigin):
         
         This method must be customized for the object type
         """
-        return scale(xx.genome, self.x_scale) # Scale genome instead of raw vector
+        return super().express(xx.genome) # Scale genome instead of raw vector
 
     def init(self, n_solutions):
         """Generates or loads initial solutions
