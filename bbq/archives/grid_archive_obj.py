@@ -37,7 +37,10 @@ class GridArchive_Obj(ArchiveBase_Obj):
         ValueError: ``dims`` and ``ranges`` are not the same length.
     """
 
-    def __init__(self, dims, ranges, seed=None, dtype=np.float64):
+    def __init__(self, p, seed=None, dtype=np.float64):
+        self.p = p
+        dims   = p['grid_res']
+        ranges = p['desc_bounds']
         self._dims = np.array(dims)
         if len(self._dims) != len(ranges):
             raise ValueError(f"dims (length {len(self._dims)}) and ranges "
@@ -152,8 +155,8 @@ class GridArchive_Obj(ArchiveBase_Obj):
 class GridArchive_Obj(GridArchive_Obj):
     """ Add Numpy explort function"""
     # TODO: export solution objects as well
-    def __init__(self, dims, ranges, seed=None, dtype=np.float64):
-        super().__init__(dims, ranges, seed=seed, dtype=dtype)
+    def __init__(self, p, seed=None, dtype=np.float64):
+        super().__init__(p, seed=seed, dtype=dtype)
 
     def as_numpy(self, include_metadata=False):
         # Create array
