@@ -43,7 +43,7 @@ def plot_ys(x, ys, labels, ax=None, reverse_y=False):
 def map_to_image(Z, ax=None):
     if ax is None:
         fig, ax = plt.subplots(figsize=(4,4), dpi=150)        
-    img = ax.imshow(np.rollaxis(Z,1), cmap='YlGnBu')
+    img = ax.imshow(np.rollaxis(Z,1).astype(float), cmap='YlGnBu')
     cbar = plt.colorbar(img,ax=ax)
     ax.invert_yaxis()
     return ax

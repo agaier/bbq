@@ -11,13 +11,13 @@ class GridArchive(GridArchive):
     def as_numpy(self, include_metadata=False):
         # Create array
         grid_res = [len(a)-1 for a in self.boundaries]
-        n_channels = sum([1, self._behavior_dim])
+        n_channels = sum([1, self._behavior_dim, self.dims])
         np_archive = np.full(np.r_[grid_res, n_channels], np.nan)
 
         # Fill array
         # --> TODO: work on higher dim grids
         for elite in self:
-            elite_stats = np.r_[elite.obj, elite.beh]
+            elite_stats = np.r_[elite.obj, elite.beh, elite.sol]
             np_archive[elite.idx[0], elite.idx[1], :] = elite_stats
         if not include_metadata:
             return np_archive
