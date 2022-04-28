@@ -1,6 +1,3 @@
-from logging import raiseExceptions
-from ribs.visualize import grid_archive_heatmap
-
 import matplotlib.pyplot as plt
 from pathlib import Path
 import json
@@ -43,6 +40,10 @@ class RibsLogger():
         if copy_config:
             self.copy_config()
         
+    def final_log(self, domain, archive, itr, time):
+        ''' Final log method, allows for final visualization/evaluation options '''
+        self.log_metrics(self, archive, itr, time, save_all=True)
+        self.zip_results()
 
     def log_metrics(self, archive, itr, time, save_all=False):
         ''' Calls all logging and visualization functions '''

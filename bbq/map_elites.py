@@ -36,4 +36,5 @@ def map_elites(d, p, logger,
         non_logging_time += time.time() - itr_start
         logger.log_metrics(archive, itr, time=time.time() - itr_start)
 
+    logger.final_log(d, archive, itr, time=time.time() - itr_start)
     return archive
