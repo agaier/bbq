@@ -42,7 +42,7 @@ class RibsLogger():
         
     def final_log(self, domain, archive, itr, time):
         ''' Final log method, allows for final visualization/evaluation options '''
-        self.log_metrics(self, archive, itr, time, save_all=True)
+        self.log_metrics(archive, itr, time, save_all=True)
         self.zip_results()
 
     def log_metrics(self, archive, itr, time, save_all=False):

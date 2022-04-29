@@ -11,7 +11,7 @@ class GridArchive(GridArchive):
     def as_numpy(self, include_metadata=False):
         # Create array
         grid_res = [len(a)-1 for a in self.boundaries]
-        n_channels = sum([1, self._behavior_dim, self.dims])
+        n_channels = sum([1, self._behavior_dim, self.p['n_dof']])
         np_archive = np.full(np.r_[grid_res, n_channels], np.nan)
 
         # Fill array
