@@ -1,18 +1,9 @@
 from bbq.archives.grid_archive import GridArchive
-from bbq.archives._archive_base_obj import ArchiveBase_Obj
 import numpy as np
 
-class GridArchive_Obj(GridArchive, ArchiveBase_Obj):
+class GridArchive_Obj(GridArchive):
     def __init__(self, p, seed=None):
-        super().__init__(p, seed)
-
-    # -- Object-specific functions to inherit -- #
-    def insert(self, index, solution, objective_value, behavior_values, metadata):
-        return super(GridArchive, self).insert(
-            index, solution, objective_value, behavior_values, metadata)
-
-    def initialize(self, solution_dim):
-        return super(GridArchive, self).initialize(solution_dim)
+        super().__init__(p, seed, is_object=True)
 
     def as_numpy(self, include_metadata=False):
         # Create array

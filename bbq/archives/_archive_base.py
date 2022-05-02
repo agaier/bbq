@@ -199,7 +199,8 @@ class ArchiveBase(ABC):  # pylint: disable = too-many-instance-attributes
             :meth:`initialize` is called.
     """
 
-    def __init__(self, storage_dims, behavior_dim, seed=None, dtype=np.float64):
+    def __init__(self, storage_dims, behavior_dim, seed=None, dtype=np.float64, 
+                       is_object=False):
 
         ## Intended to be accessed by child classes. ##
 
@@ -225,8 +226,11 @@ class ArchiveBase(ABC):  # pylint: disable = too-many-instance-attributes
 
         # Tracks archive modifications by counting calls to clear() and add().
         self._state = None
-
         self._dtype = self._parse_dtype(dtype)
+        if is_object is True:
+            self._sol_dtype = object
+        else:
+            self._sol_dtype = self._dtype
 
     @staticmethod
     def _parse_dtype(dtype):
@@ -290,6 +294,12 @@ class ArchiveBase(ABC):  # pylint: disable = too-many-instance-attributes
         values."""
         return self._dtype
 
+    @property
+    def sol_dtype(self):
+        """data-type: The dtype of the solutions, objective values, and behavior
+        values."""
+        return self._sol_dtype        
+
     def __len__(self):
         """Number of elites in the archive."""
         require_init_inline(self)
@@ -344,13 +354,16 @@ class ArchiveBase(ABC):  # pylint: disable = too-many-instance-attributes
         """
         if self._initialized:
             raise RuntimeError("Cannot re-initialize an archive")
+
+
         self._initialized = True
 
         self._rand_buf = RandomBuffer(self._seed)
         self._solution_dim = solution_dim
         self._occupied = np.zeros(self._storage_dims, dtype=bool)
+
         self._solutions = np.empty((*self._storage_dims, solution_dim),
-                                   dtype=self.dtype)
+                                   dtype=self.sol_dtype)
         self._objective_values = np.empty(self._storage_dims, dtype=self.dtype)
         self._behavior_values = np.empty(
             (*self._storage_dims, self._behavior_dim), dtype=self.dtype)
@@ -396,12 +409,10 @@ class ArchiveBase(ABC):  # pylint: disable = too-many-instance-attributes
             storage arrays.
         """
 
-    @staticmethod
-    @nb.jit(locals={"already_occupied": nb.types.b1}, nopython=True)
-    def _add_numba(new_index, new_solution, new_objective_value,
+    def _add_to_bin(self, new_index, new_solution, new_objective_value,
                    new_behavior_values, occupied, solutions, objective_values,
                    behavior_values):
-        """Numba helper for inserting solutions into the archive.
+        """Helper for inserting solutions into the archive.
 
         See add() for usage.
 
@@ -411,6 +422,9 @@ class ArchiveBase(ABC):  # pylint: disable = too-many-instance-attributes
             already_occupied (bool): Whether the index was occupied prior
                 to this call; i.e. this is True only if there was already an
                 item at the index.
+
+        BBQ: Assignment is from a bottleneck -- numba just blocks flexibility
+             by not allowing objects.
         """
         already_occupied = occupied[new_index]
         if (not already_occupied or
@@ -428,6 +442,39 @@ class ArchiveBase(ABC):  # pylint: disable = too-many-instance-attributes
             return True, already_occupied
 
         return False, already_occupied
+
+    # @staticmethod
+    # @nb.jit(locals={"already_occupied": nb.types.b1}, nopython=True)
+    # def _add_numba(new_index, new_solution, new_objective_value,
+    #                new_behavior_values, occupied, solutions, objective_values,
+    #                behavior_values):
+    #     """Numba helper for inserting solutions into the archive.
+
+    #     See add() for usage.
+
+    #     Returns:
+    #         was_inserted (bool): Whether the new values were inserted into the
+    #             archive.
+    #         already_occupied (bool): Whether the index was occupied prior
+    #             to this call; i.e. this is True only if there was already an
+    #             item at the index.
+    #     """
+    #     already_occupied = occupied[new_index]
+    #     if (not already_occupied or
+    #             objective_values[new_index] < new_objective_value):
+    #         # Track this index if it has not been seen before -- important that
+    #         # we do this before inserting the solution.
+    #         if not already_occupied:
+    #             occupied[new_index] = True
+
+    #         # Insert into the archive.
+    #         objective_values[new_index] = new_objective_value
+    #         behavior_values[new_index] = new_behavior_values
+    #         solutions[new_index] = new_solution
+
+    #         return True, already_occupied
+
+    #     return False, already_occupied
 
     def _add_occupied_index(self, index):
         """Adds a new index to the lists of occupied indices."""
@@ -486,7 +533,6 @@ class ArchiveBase(ABC):  # pylint: disable = too-many-instance-attributes
         was_inserted, already_occupied = self.insert(
             index, solution, objective_value, behavior_values, metadata)
 
-
         if was_inserted and not already_occupied:
             self._add_occupied_index(index)
             status = AddStatus.NEW
@@ -503,7 +549,7 @@ class ArchiveBase(ABC):  # pylint: disable = too-many-instance-attributes
 
     def insert(self, index, solution, objective_value, behavior_values, metadata):
         """ BBQ: Cut out of main add function to allow variations """
-        was_inserted, already_occupied = self._add_numba(
+        was_inserted, already_occupied = self._add_to_bin(
             index, solution, objective_value, behavior_values, self._occupied,
             self._solutions, self._objective_values, self._behavior_values)
 
