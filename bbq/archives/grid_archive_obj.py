@@ -6,8 +6,13 @@ class GridArchive_Obj(GridArchive, ArchiveBase_Obj):
     def __init__(self, p, seed=None):
         super().__init__(p, seed)
 
-    def add(self, solution, objective_value, behavior_values, metadata=None):
-        super(GridArchive, self).add(solution, objective_value, behavior_values, metadata)
+    # -- Object-specific functions to inherit -- #
+    def insert(self, index, solution, objective_value, behavior_values, metadata):
+        return super(GridArchive, self).insert(
+            index, solution, objective_value, behavior_values, metadata)
+
+    def initialize(self, solution_dim):
+        return super(GridArchive, self).initialize(solution_dim)
 
     def as_numpy(self, include_metadata=False):
         # Create array

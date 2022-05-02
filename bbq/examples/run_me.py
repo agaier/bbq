@@ -11,7 +11,6 @@ def run_me(domain, p, emitter_type=GaussianEmitter, archive_type=GridArchive):
     logger = RibsLogger(p)
     archive = map_elites(d, p, logger, emitter_type=emitter_type, 
                                        archive_type=archive_type)    
-    logger.zip_results()
     print('\n[*] Done')
 
 if __name__ == '__main__':

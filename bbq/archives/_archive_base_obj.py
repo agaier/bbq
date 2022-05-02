@@ -1,5 +1,6 @@
 import numpy as np
-from ribs.archives._archive_base import ArchiveBase, RandomBuffer, AddStatus, require_init
+from ribs.archives._archive_base import RandomBuffer, AddStatus, require_init
+from bbq.archives._archive_base import ArchiveBase
 
 import numba as nb
 
@@ -14,6 +15,18 @@ class ArchiveBase_Obj(ArchiveBase):
             dtype=dtype,
         )
 
+    def insert(self, index, solution, objective_value, behavior_values, metadata):
+        """ BBQ: Variation which inserts solution without numba """
+        was_inserted, already_occupied = self._add_numba(
+            index, objective_value, behavior_values, self._occupied,
+            self._objective_values, self._behavior_values)
+
+        if was_inserted:
+            self._metadata[index] = metadata
+            self._solutions[index] = solution
+
+        return was_inserted, already_occupied
+
     def initialize(self, solution_dim):
         """Initializes the archive by allocating storage space.
 
@@ -25,6 +38,7 @@ class ArchiveBase_Obj(ArchiveBase):
         Raises:
             RuntimeError: The archive is already initialized.
         """
+
         if self._initialized:
             raise RuntimeError("Cannot re-initialize an archive")
         self._initialized = True
@@ -48,8 +62,8 @@ class ArchiveBase_Obj(ArchiveBase):
     @staticmethod
     @nb.jit(locals={"already_occupied": nb.types.b1}, nopython=True)
     def _add_numba(new_index, new_objective_value,
-                   new_behavior_values, occupied, objective_values,
-                   behavior_values):
+                    new_behavior_values, occupied, objective_values,
+                    behavior_values):
         """Numba helper for inserting solutions into the archive.
 
         See add() for usage.
@@ -72,71 +86,6 @@ class ArchiveBase_Obj(ArchiveBase):
             # Insert into the archive.
             objective_values[new_index] = new_objective_value
             behavior_values[new_index] = new_behavior_values
-
             return True, already_occupied
-
-        return False, already_occupied            
-
-    @require_init
-    def add(self, solution, objective_value, behavior_values, metadata=None):
-        """Attempts to insert a new solution into the archive.
-
-        The solution is only inserted if it has a higher ``objective_value``
-        than the elite previously in the corresponding bin.
-
-        Args:
-            solution (array-like): Parameters of the solution.
-            objective_value (float): Objective function evaluation of the
-                solution.
-            behavior_values (array-like): Coordinates in behavior space of the
-                solution.
-            metadata (object): Any Python object representing metadata for the
-                solution. For instance, this could be a dict with several
-                properties.
-        Returns:
-            tuple: 2-element tuple describing the result of the add operation.
-            These outputs are particularly useful for algorithms such as CMA-ME.
-
-                **status** (:class:`AddStatus`): See :class:`AddStatus`.
-
-                **value** (:attr:`dtype`): The meaning of this value depends on
-                the value of ``status``:
-
-                - ``NOT_ADDED`` -> the "negative improvement," i.e. objective
-                  value of solution passed in minus objective value of the
-                  solution still in the archive (this value is negative because
-                  the solution did not have a high enough objective value to be
-                  added to the archive)
-                - ``IMPROVE_EXISTING`` -> the "improvement," i.e. objective
-                  value of solution passed in minus objective value of solution
-                  previously in the archive
-                - ``NEW`` -> the objective value passed in
-        """
-        self._state["add"] += 1
-        behavior_values = np.asarray(behavior_values)
-        objective_value = self.dtype(objective_value)
-
-        index = self.get_index(behavior_values)
-        old_objective = self._objective_values[index]
-
-        was_inserted, already_occupied = self._add_numba(
-            index, objective_value, behavior_values, self._occupied,
-            self._objective_values, self._behavior_values)
-
-        if was_inserted:
-            self._metadata[index] = metadata
-            self._solutions[index] = solution
-
-        if was_inserted and not already_occupied:
-            self._add_occupied_index(index)
-            status = AddStatus.NEW
-            value = objective_value
-            self._stats_update(self.dtype(0.0), objective_value)
-        elif was_inserted and already_occupied:
-            status = AddStatus.IMPROVE_EXISTING
-            value = objective_value - old_objective
-            self._stats_update(old_objective, objective_value)
-        else:
-            status = AddStatus.NOT_ADDED
-            value = objective_value - old_objective
-        return status, value
+            
+        return False, already_occupied        
