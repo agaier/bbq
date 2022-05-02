@@ -443,39 +443,6 @@ class ArchiveBase(ABC):  # pylint: disable = too-many-instance-attributes
 
         return False, already_occupied
 
-    # @staticmethod
-    # @nb.jit(locals={"already_occupied": nb.types.b1}, nopython=True)
-    # def _add_numba(new_index, new_solution, new_objective_value,
-    #                new_behavior_values, occupied, solutions, objective_values,
-    #                behavior_values):
-    #     """Numba helper for inserting solutions into the archive.
-
-    #     See add() for usage.
-
-    #     Returns:
-    #         was_inserted (bool): Whether the new values were inserted into the
-    #             archive.
-    #         already_occupied (bool): Whether the index was occupied prior
-    #             to this call; i.e. this is True only if there was already an
-    #             item at the index.
-    #     """
-    #     already_occupied = occupied[new_index]
-    #     if (not already_occupied or
-    #             objective_values[new_index] < new_objective_value):
-    #         # Track this index if it has not been seen before -- important that
-    #         # we do this before inserting the solution.
-    #         if not already_occupied:
-    #             occupied[new_index] = True
-
-    #         # Insert into the archive.
-    #         objective_values[new_index] = new_objective_value
-    #         behavior_values[new_index] = new_behavior_values
-    #         solutions[new_index] = new_solution
-
-    #         return True, already_occupied
-
-    #     return False, already_occupied
-
     def _add_occupied_index(self, index):
         """Adds a new index to the lists of occupied indices."""
         self._occupied_indices.append(index)
