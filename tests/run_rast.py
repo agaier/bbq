@@ -1,7 +1,5 @@
 """ Simple rastrigin example using bbq pattern  """
-
-
-from bbq.archives.grid_archive_obj import GridArchive_Obj
+from bbq.archives.grid_archive import GridArchive_Obj
 from bbq.emitters.obj_emitter import ObjEmitter
 from bbq.logging.logger import RibsLogger
 from bbq.map_elites import map_elites
@@ -28,6 +26,6 @@ if __name__ == '__main__':
     
     p = create_config(base_config, exp_config)
 
-    run_me(Rastrigin, p)
+    #run_me(Rastrigin, p)
     run_me(Rastrigin_obj, p, emitter_type=ObjEmitter, 
                              archive_type=GridArchive_Obj)
