@@ -1,0 +1,6 @@
+
+- Put grid numpy conversion in logger not archive
+- 'Baseline' option in logger to plot on top of known data
+- d.upkeep(archive, itr) # do something sometimes at end of loop
+    - restart dask, retrain vae, other miscellany
+    
