@@ -364,10 +364,17 @@ class ArchiveBase(ABC):  # pylint: disable = too-many-instance-attributes
 
         self._solutions = np.empty((*self._storage_dims, solution_dim),
                                    dtype=self.sol_dtype)
-        self._objective_values = np.empty(self._storage_dims, dtype=self.dtype)
+        self._objective_values = np.full((self._storage_dims), np.nan)
         self._behavior_values = np.empty(
             (*self._storage_dims, self._behavior_dim), dtype=self.dtype)
         self._metadata = np.empty(self._storage_dims, dtype=object)
+
+        # self._solutions = np.empty((*self._storage_dims, solution_dim),
+        #                            dtype=self.sol_dtype)
+        # self._objective_values = np.empty(self._storage_dims, dtype=self.dtype)
+        # self._behavior_values = np.empty(
+        #     (*self._storage_dims, self._behavior_dim), dtype=self.dtype)
+        # self._metadata = np.empty(self._storage_dims, dtype=object)
         self._occupied_indices = []
         self._occupied_indices_cols = tuple(
             [] for _ in range(len(self._storage_dims)))
