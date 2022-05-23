@@ -37,6 +37,9 @@ class RibsLogger():
                 shutil.rmtree(self.log_dir)
         self.log_dir.mkdir(parents=True,exist_ok=True)
 
+        self.archive_dir = self.log_dir/'archive'
+        self.archive_dir.mkdir(parents=True,exist_ok=True)
+
         if copy_config:
             self.copy_config()
         
@@ -59,7 +62,10 @@ class RibsLogger():
             self.plot_obj(archive)
 
         if (itr%self.p['save_rate']==0) or save_all:
-            self.save_archive(archive, self.log_dir, export_meta=self.save_meta)
+            #self.save_archive(archive, self.log_dir, export_meta=self.save_meta)
+            #self.save_archive(archive, self.archive_dir, itr, export_meta=self.save_meta)
+            self.save_archive(archive, itr=itr, export_meta=self.save_meta)
+
 
     def update_metrics(self, archive, itr):
         ''' Adds current iterations metrics to running record '''        
@@ -92,19 +98,20 @@ class RibsLogger():
         plt.savefig(fname,bbox_inches='tight')
         plt.clf(); plt.close()
 
-    def save_archive(self, archive, outdir, f_type='numpy', export_meta=True):  
+    def save_archive(self, archive, itr='', f_type='numpy', export_meta=True):  
         ''' Saves entire archive as a pandas file, optionally w/metadata '''             
+        outdir = self.archive_dir
         if f_type == 'numpy':
             out_archive = archive.as_numpy(include_metadata=export_meta)
             out_archive = np.rollaxis(out_archive,-1)
             if export_meta:
-                np.save(outdir / f'archive.npy', out_archive[0])
-                np.save(outdir / f'archive_meta.npy', out_archive[1])
+                np.save(outdir / f'archive_{itr}.npy', out_archive[0])
+                np.save(outdir / f'archive_meta_{itr}.npy', out_archive[1])
             else:
-                np.save(outdir / f'archive.npy', out_archive)
+                np.save(outdir / f'archive_{itr}.npy', out_archive)
         elif f_type == 'pandas':
             final_archive = archive.as_pandas(include_metadata=True)
-            final_archive.to_pickle(outdir / f'archive.pd')
+            final_archive.to_pickle(outdir / f'archive_{itr}.pd')
         else:
             raise ValueError("Invalid file type for archive (numpy/pandas)")     
 
