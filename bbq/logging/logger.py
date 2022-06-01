@@ -10,9 +10,10 @@ from humanfriendly import format_timespan
 
 
 class RibsLogger():
-    def __init__(self, p, save_meta=False, copy_config=True, clear=True, rep=None):
+    def __init__(self, p, save_meta=False, copy_config=True, clear=True, rep=0, zip=False):
         self.p = p
-        self.save_meta = save_meta        
+        self.save_meta = save_meta      
+        self.zip = zip  
         self.metrics = {
             "Archive Size": {
                 "itrs": [0],
@@ -28,10 +29,10 @@ class RibsLogger():
             },              
         }       
         # Reset log folder
-        if rep is None:
-            self.log_dir = Path(f'log/{p["task_name"]}/{p["exp_name"]}')
-        else:
-            self.log_dir = Path(f'log/{p["task_name"]}/{p["exp_name"]}/{rep}')
+        # if rep is None:
+        #     self.log_dir = Path(f'log/{p["task_name"]}/{p["exp_name"]}')
+        # else:
+        self.log_dir = Path(f'log/{p["task_name"]}/{p["exp_name"]}/{rep}')
         if clear:
             if self.log_dir.exists() and self.log_dir.is_dir():
                 shutil.rmtree(self.log_dir)
@@ -45,10 +46,10 @@ class RibsLogger():
         
     def final_log(self, domain, archive, itr, time):
         ''' Final log method, allows for final visualization/evaluation options '''
-        self.log_metrics(archive, itr, time, save_all=True)
+        self.log_metrics(domain, archive, itr, time, save_all=True)
         self.zip_results()
 
-    def log_metrics(self, archive, itr, time, save_all=False):
+    def log_metrics(self, domain, archive, itr, time, save_all=False):
         ''' Calls all logging and visualization functions '''
         self.update_metrics(archive, itr)
         if (itr%self.p['print_rate'] == 0) or self.p['print_rate'] == 1:
