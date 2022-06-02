@@ -22,10 +22,11 @@ class Rastrigin(RibsDomain):
         return scale(x, self.param_bounds)
 
     def prep_eval(self, p):
-        client = create_dask_client(p['n_workers']) 
+        #client = create_dask_client(p['n_workers']) 
+        client = None # for quick benchmarks multithreading isn't worth it
         return client
 
     def batch_eval(self, xx, client):
-        objs, bcs, pheno = dask_eval(xx, self.evaluate, client) 
-        metas = pheno
+        objs, bcs, phenos = dask_eval(xx, self.evaluate, client, serial=True) 
+        metas = phenos
         return objs, bcs, metas
