@@ -6,8 +6,18 @@ from bbq.domains._domain import RibsDomain
 from bbq.parallel import create_dask_client, dask_eval
 
 class Arm(RibsDomain):
-    def __init__(self, p, seed=0):
+    """Unbiased Planar Arm
+
+    Planar Arm with random offsets, set at instantiation. Clipped 'dead zones' 
+    are inserted at random points in the top and bottom of range in an effort
+    to remove biases from initialization. 
+    
+    See planar_arm.ipynb for details and illustration.
+
+    """
+    def __init__(self, p, seed=0, slope=2.0):
         RibsDomain.__init__(self, p) 
+        self.slope = slope # 1: 100% alive, 1.25: 80% alive, 1.5: 66% alive, 2: 50% alive
         self.param_bounds = p['param_bounds'] 
         if seed is None:
             self.offset = np.ones(self.n_dof)*0.5
@@ -16,7 +26,7 @@ class Arm(RibsDomain):
             print(self.offset)
     
     def _fitness(self, pheno): 
-        norm_theta = (pheno+math.pi)/2
+        norm_theta = (pheno+math.pi)/(2*math.pi)
         return 1 - np.std(norm_theta)
     
     def _desc(self, pheno):
@@ -26,9 +36,9 @@ class Arm(RibsDomain):
         return np.array((x,y))
 
     def express(self, x):
-        shifted_x = (x*2) - self.offset
-        clipped_x = np.clip(shifted_x, 0,1)
-        pheno = 2 * math.pi * clipped_x - math.pi
+        x = (x*self.slope) - (self.offset*(self.slope-1))
+        x = np.clip(x,0,1)
+        pheno = 2 * math.pi * x - math.pi    
         return pheno
 
     def init(self, n_solutions):
