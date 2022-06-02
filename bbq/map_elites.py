@@ -33,8 +33,9 @@ def map_elites(d, p, logger,
         opt.tell(objs, bcs, meta)                       # Add to archive
 
         # - Logging -----------------------------------------------------------#
-        non_logging_time += time.time() - itr_start
-        logger.log_metrics(d, archive, itr, time=time.time() - itr_start)
+        itr_time = time.time() - itr_start
+        non_logging_time += itr_time
+        logger.log_metrics(opt, d, itr, itr_time)
 
-    logger.final_log(d, archive, itr, time=time.time() - itr_start)
+    logger.final_log(opt, d, itr, non_logging_time)
     return archive

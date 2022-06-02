@@ -5,7 +5,7 @@ import shutil
 import numpy as np
 from bbq.logging.plotting import  map_to_image, set_map_grid, plot_ys
 from humanfriendly import format_timespan
-
+import pickle
 
 
 
@@ -49,8 +49,11 @@ class RibsLogger():
         self.log_metrics(domain, archive, itr, time, save_all=True)
         self.zip_results()
 
-    def log_metrics(self, domain, archive, itr, time, save_all=False):
+    #def log_metrics(self, domain, archive, itr, time, save_all=False):
+    def log_metrics(self, opt, d, itr, time, save_all=False):
         ''' Calls all logging and visualization functions '''
+        archive = opt.archive
+        emitter = opt.emitters
         self.update_metrics(archive, itr)
         if (itr%self.p['print_rate'] == 0) or self.p['print_rate'] == 1:
             n_evals = self.p['n_batch']*self.p['n_emitters']
@@ -61,11 +64,51 @@ class RibsLogger():
         if (itr%self.p['plot_rate']==0) or save_all:
             self.plot_metrics()
             self.plot_obj(archive)
+            self.plot_pulse(emitter)
 
         if (itr%self.p['save_rate']==0) or save_all:
             #self.save_archive(archive, self.log_dir, export_meta=self.save_meta)
             #self.save_archive(archive, self.archive_dir, itr, export_meta=self.save_meta)
             self.save_archive(archive, itr=itr, export_meta=self.save_meta)
+            self.save_pulse(emitter)
+
+    def save_pulse(self, emitter):        
+        pulses = [e.pulse[1:,:] for e in emitter] # skip 0
+        if np.sum(np.stack(pulses)) == 0: return # no pulse data for emitters
+        with open(self.log_dir / 'emitter_pulse.pkl', 'wb') as f:
+            pickle.dump(pulses, f)
+
+    def plot_pulse(self, emitter):
+        # - Prep Data
+        pulses = [e.pulse[1:,:] for e in emitter] # skip 0th
+        if np.sum(np.stack(pulses)) == 0: return # no pulse data for emitters
+        def norm_pulse(pulse):
+            n_children  = np.sum(pulse,axis=1)
+            norm_factor = np.tile(n_children,(3,1)).T
+            pulse /= norm_factor
+            return pulse
+        stat = [norm_pulse(np.array(p)) for p in pulses]
+        
+        # - Plot Data
+        rows = int(np.ceil(len(stat)/2))
+        fig,ax = plt.subplots(nrows=rows,ncols=2,figsize=(8,4),dpi=100)
+        ax = ax.flatten()
+        event_label = ['NOT ADDED', 'IMPROVED', 'DISCOVERED']
+        emitter_label = self.p['emitter_label']
+        for i, pulse in enumerate(stat):
+            x = np.arange(len(pulse))
+            y = pulse
+            ax[i].stackplot(x, y[:,0], y[:,1], y[:,2], labels=event_label)
+            ax[i].set_title(f"Iso Sigma: {emitter_label[i]}")
+
+        plt.subplots_adjust(hspace=0.5)
+        ax[-2].legend(loc='upper center', bbox_to_anchor=(1.1, -0.2), 
+                   fancybox=True, shadow=True, ncol=3)        
+        fname = str(self.log_dir / "emitter_pulse.png")
+        plt.savefig(fname,bbox_inches='tight')
+        plt.clf(); plt.close()
+
+            
 
 
     def update_metrics(self, archive, itr):

@@ -4,7 +4,7 @@ task_name: 'arm'
 n_workers: 8
 
 # -- Domain -- #
-n_dof: 8
+n_dof: 6
 param_bounds: [0, 1]
 desc_bounds:
 - [0, 1]
@@ -12,7 +12,8 @@ desc_bounds:
 desc_labels:
 - X-Coord
 - Y-Coord
-iso_sigma: [0.1, 0.1, 0.05, 0.025]
+iso_sigma:     [0.1, 0.1, 0.05, 0.025]
+emitter_label: [0.1, 0.1, 0.05, 0.025]
 
 # -- MAP-Elites -- #
 grid_res: [25, 25]

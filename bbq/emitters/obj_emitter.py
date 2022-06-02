@@ -4,9 +4,7 @@
 
 """
 import numpy as np
-from numba import jit
-
-from ribs.emitters._emitter_base import EmitterBase
+from bbq.emitters._emitter_base import EmitterBase
 
 
 
@@ -16,13 +14,7 @@ class ObjEmitter(EmitterBase):
     """
 
     def __init__(self, archive, mutation_params, batch_size=64, seed=None):
-        EmitterBase.__init__(
-            self,
-            archive,
-            1,
-            None,
-            
-        )
+        EmitterBase.__init__(self, archive, 1, None)
         self._p = mutation_params
         self._batch_size = batch_size
         self._rng = np.random.default_rng(seed)
@@ -51,9 +43,9 @@ class ObjEmitter(EmitterBase):
                 self.archive.get_random_elite().sol[0]
                 for _ in range(self._batch_size)
             ]
-
-        children = []
-        for parent in parents:
-            children += [parent.mutate(self._p)]
+        children = [parent.mutate(self._p) for parent in parents]
+        # children = []
+        # for parent in parents:
+        #     children += [parent.mutate(self._p)]
 
         return children
