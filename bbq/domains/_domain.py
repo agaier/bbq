@@ -5,7 +5,7 @@ import inspect
 class RibsDomain():
     def __init__(self, p):
         self.n_dof  = p['n_dof']
-        self.n_desc = len(p['desc_bounds'])
+        self.n_desc = len(p['descriptors'])
 
     def evaluate(self, x):
             """ Evaluates a single individual, giving an objective and descriptor

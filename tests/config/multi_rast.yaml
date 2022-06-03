@@ -6,28 +6,31 @@ n_workers: 1
 # -- Domain -- #
 n_dof: 10
 param_bounds: [-2, 2]
-iso_sigma:     [0.2, 0.1, 0.05, 0.025]
-emitter_label: [0.2, 0.1, 0.05, 0.025]
-
+iso_sigma:     [0.1, 0.05, 0.02, 0.01]
+emitter_label: [0.1, 0.05, 0.02, 0.01]
+descriptors:
+  - Param 1
+  - Param 2
 
 # -- Archive -- #
-# TODO: Make archive params contained objects
-desc_bounds:
-- [-2, 2] 
-- [-2, 2] 
-- [-1, 1] 
-- [-1, 1] 
-
-desc_labels:
-- Param 1
-- Param 2
-- Param 1
-- Param 2
-
-grid_res: 
-- [10, 10]
-- [16, 16]
-
+Archives:
+  - #1
+    desc_bounds:
+      - [-2, 2] 
+      - [-2, 2]          
+    desc_labels:
+      - Param 1
+      - Param 2        
+    grid_res: [16,16]
+        
+  - #2
+    desc_bounds:
+      - [0, 2] 
+      - [0, 2]          
+    desc_labels:
+      - Param 1
+      - Param 2        
+    grid_res: [8,8]
 
 # -- MAP-Elites -- #
 n_init: 100

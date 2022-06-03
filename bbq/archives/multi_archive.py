@@ -7,8 +7,8 @@ from ribs.archives._elite import Elite
 class MultiContainer:
     """A class for wrapping multiple containers"""
     def __init__(self, p, archive_type, seed=None):
-        self._archive_params = get_archive_params(p) # <-- store in archive
-        self._archives = [archive_type(a_p) for a_p in self._archive_params]
+        archive_p = [{**A, **{'n_dof': p['n_dof']}} for A in p['Archives']]
+        self._archives = [archive_type(a_p) for a_p in archive_p]
         self.dtype = self._archives[0].dtype
 
         ## Randomness ##
@@ -80,12 +80,6 @@ class MultiContainer:
 
 
 def get_archive_params(p):
-    p_list = []
-    for i in range(len(p['grid_res'])):
-        a_param = {}
-        a_param['desc_bounds'] = p['desc_bounds'][i:i+2]
-        a_param['desc_labels'] = p['desc_labels'][i:i+2]
-        a_param['grid_res']    = p['grid_res'][i]
-        a_param['n_dof']       = p['n_dof']
-        p_list += [a_param]
+    p_list = p['Archives']
+
     return p_list

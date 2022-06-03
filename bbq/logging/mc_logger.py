@@ -48,10 +48,10 @@ class MCLogger(RibsLogger):
             A = np.rollaxis(archive.as_numpy(),-1)
             val = A[0]
             fig,ax = plt.subplots(nrows=1,ncols=1,figsize=(4,4),dpi=150)
-            ax = map_to_image(val, ax=ax)
-            ax = set_map_grid(ax, val, **archives._archive_params[i]) 
-            ax.set(xlabel = self.p['desc_labels'][0], 
-                ylabel= self.p['desc_labels'][1])
+            ax = map_to_image(val, ax=ax, clim=(150,200))
+            ax = set_map_grid(ax, val, **archive.p) 
+            ax.set(xlabel = archive.p['desc_labels'][0], 
+                   ylabel = archive.p['desc_labels'][1])
             plt.subplots_adjust(hspace=0.4)
             fig.savefig(str(self.log_dir / f"{i}-MAP_Fitness.png"))
             plt.clf(); plt.close()        

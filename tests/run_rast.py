@@ -5,7 +5,7 @@ from bbq.logging.logger import RibsLogger
 from bbq.map_elites import map_elites
 from bbq.archives import GridArchive
 
-from ribs.emitters import GaussianEmitter
+from bbq.emitters import GaussianEmitter
 
 def run_me(domain, p, emitter_type=GaussianEmitter, archive_type=GridArchive):
     d = domain(p)
@@ -26,6 +26,6 @@ if __name__ == '__main__':
     
     p = create_config(base_config, exp_config)
 
-    #run_me(Rastrigin, p)
-    run_me(Rastrigin_obj, p, emitter_type=ObjEmitter, 
-                             archive_type=GridArchive_Obj)
+    run_me(Rastrigin, p)
+    # run_me(Rastrigin_obj, p, emitter_type=ObjEmitter, 
+    #                          archive_type=GridArchive_Obj)
