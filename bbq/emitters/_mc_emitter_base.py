@@ -50,7 +50,8 @@ class MC_EmitterBase(EmitterBase):
         metadata = itertools.repeat(None) if metadata is None else metadata
         for sol, obj, beh, meta in zip(solutions, objective_values,
                                        behavior_values, metadata):
-            for archive in self.archive._archives:                                       
-                status, value = archive.add(sol, obj, beh, meta)
+            for archive in self.archive._archives:       
+                chosen_desc = self.archive.chosen_desc(beh, archive)                                
+                status, value = archive.add(sol, obj, chosen_desc, meta)
                 pulse[status] += 1
         self.pulse = np.vstack([self.pulse, pulse])

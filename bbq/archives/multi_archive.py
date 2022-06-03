@@ -21,10 +21,21 @@ class MultiContainer:
         for archive in self._archives:
             archive.initialize(solution_dim)
 
-    def add_batch(self, sols, objs, desc, metas):
+    def add_batch(self, sols, objs, descs, metas):
         """Add batch of elites to all archives"""
         for archive in self._archives:
-            archive.add_batch(sols, objs, desc, metas)
+            chosen_descs = self.chosen_desc(descs, archive)
+            archive.add_batch(sols, objs, chosen_descs, metas)
+
+    def chosen_desc(self, desc, archive):
+        p1, p2 = archive.p['desc_labels']
+        if type(desc[0]) == np.ndarray:
+            d1, d2 = [d[0][p1] for d in desc], [d[0][p2] for d in desc]
+            return np.c_[d1,d2]
+        else:
+            d1, d2 = [d[p1] for d in desc], [d[p2] for d in desc]
+            return np.c_[d1,d2][0]
+
 
     def as_numpy(self, **kwargs):
         return [a.as_numpy(**kwargs) for a in self._archives]

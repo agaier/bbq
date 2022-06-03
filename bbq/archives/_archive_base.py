@@ -11,6 +11,8 @@ from ribs.archives._add_status import AddStatus
 from ribs.archives._archive_data_frame import ArchiveDataFrame
 from ribs.archives._archive_stats import ArchiveStats
 from ribs.archives._elite import Elite
+import itertools
+
 
 
 @decorator
@@ -534,14 +536,18 @@ class ArchiveBase(ABC):  # pylint: disable = too-many-instance-attributes
 
 
 
-    def add_batch(self, xx, objs, descs, meta=None):
+    def add_batch(self, xx, objs, descs, metadata=None):
         """ BBQ: Add set of solutions at once"""
-        if meta is not None:
-            for i in range(len(objs)):
-                self.add(xx[i], objs[i], descs[i], metadata=meta[i])
-        else:
-            for i in range(len(objs)):
-                self.add(xx[i], objs[i], descs[i])   
+        metadata = itertools.repeat(None) if metadata is None else metadata
+        for sol, obj, beh, meta in zip(xx, objs, descs, metadata):
+            self.add(sol, obj, beh, meta)
+
+        # if meta is not None:
+        #     for i in range(len(objs)):
+        #         self.add(xx[i], objs[i], descs[i], metadata=meta[i])
+        # else:
+        #     for i in range(len(objs)):
+        #         self.add(xx[i], objs[i], descs[i])   
 
     @require_init
     def elite_with_behavior(self, behavior_values):

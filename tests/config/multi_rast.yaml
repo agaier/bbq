@@ -11,6 +11,7 @@ emitter_label: [0.1, 0.05, 0.02, 0.01]
 descriptors:
   - Param 1
   - Param 2
+  - Param 3
 
 # -- Archive -- #
 Archives:
@@ -29,7 +30,7 @@ Archives:
       - [0, 2]          
     desc_labels:
       - Param 1
-      - Param 2        
+      - Param 3        
     grid_res: [8,8]
 
 # -- MAP-Elites -- #

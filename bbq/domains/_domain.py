@@ -4,6 +4,7 @@ import inspect
 # - Base Domains --------------------------------------------------------------#
 class RibsDomain():
     def __init__(self, p):
+        self.p = p
         self.n_dof  = p['n_dof']
         self.n_desc = len(p['descriptors'])
 
