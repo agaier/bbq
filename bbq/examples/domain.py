@@ -16,7 +16,7 @@ class Rastrigin(RibsDomain):
         return -f + 2*x.shape[0]**2 # Scale to make QD score increasing
     
     def _desc(self, x):
-        return np.array(x[0:self.n_desc])
+        return np.array(x[0:2])
 
     def express(self, x):
         return scale(x, self.param_bounds)
