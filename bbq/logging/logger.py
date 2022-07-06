@@ -49,14 +49,13 @@ class RibsLogger():
         self.log_metrics(domain, archive, itr, time, save_all=True)
         self.zip_results()
 
-    #def log_metrics(self, domain, archive, itr, time, save_all=False):
     def log_metrics(self, opt, d, itr, time, save_all=False):
         ''' Calls all logging and visualization functions '''
         archive = opt.archive
         emitter = opt.emitters
         self.update_metrics(archive, itr)
         if (itr%self.p['print_rate'] == 0) or self.p['print_rate'] == 1:
-            n_evals = self.p['n_batch']*self.p['n_emitters']
+            n_evals = sum([emitter['n_batch'] for emitter in self.p['emitters']])
             self.print_metrics(archive, itr, n_evals, time)  
             with (self.log_dir / f"metrics.json").open("w") as file:
                 json.dump(self.metrics, file, indent=2)        
@@ -94,7 +93,7 @@ class RibsLogger():
         fig,ax = plt.subplots(nrows=rows,ncols=2,figsize=(8,4),dpi=100)
         ax = ax.flatten()
         event_label = ['NOT ADDED', 'IMPROVED', 'DISCOVERED']
-        emitter_label = self.p['emitter_label']
+        emitter_label = [em.name for em in emitter]
         for i, pulse in enumerate(stat):
             x = np.arange(len(pulse))
             y = pulse
@@ -139,6 +138,7 @@ class RibsLogger():
         labels = ["Archive Size"]+["QD Score"]     
         ax = plot_ys(x, ys, labels, ax=ax) # <-- the actual plotting
         fname = str(self.log_dir / "LINE_Metrics.png")
+        ax.set_title(self.p['exp_name'])
         plt.savefig(fname,bbox_inches='tight')
         plt.clf(); plt.close()
 
@@ -151,14 +151,19 @@ class RibsLogger():
             if export_meta:
                 np.save(outdir / f'archive_{itr}.npy', out_archive[0])
                 np.save(outdir / f'archive_meta_{itr}.npy', out_archive[1])
+                np.save(outdir / f'archive.npy', out_archive[0])
+                np.save(outdir / f'archive_meta.npy', out_archive[1])
             else:
                 np.save(outdir / f'archive_{itr}.npy', out_archive)
+                np.save(outdir / f'archive.npy', out_archive)
+
         elif f_type == 'pandas':
             final_archive = archive.as_pandas(include_metadata=True)
             final_archive.to_pickle(outdir / f'archive_{itr}.pd')
         else:
             raise ValueError("Invalid file type for archive (numpy/pandas)")     
 
+    
 
     def plot_obj(self, archive):
         labels = ['Fitness']

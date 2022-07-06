@@ -10,19 +10,23 @@ import numpy as np
 
 
 class GaussianEmitter(GaussianEmitter, EmitterBase):
-    def __init__(self, archive, x0, sigma0, bounds=None, batch_size=64, seed=None):
+    def __init__(self, archive, x0, sigma0, bounds=None, batch_size=64, seed=None, name='--', **_):
         super().__init__(archive, x0, sigma0, bounds, batch_size, seed)
+        self.name = name
 
 
 class IsoLineEmitter(IsoLineEmitter, EmitterBase):
-    def __init__(self, archive, x0, iso_sigma=0.01, line_sigma=0.2, bounds=None, batch_size=64, seed=None):
+    def __init__(self, archive, x0, iso_sigma=0.01, line_sigma=0.2, bounds=None, batch_size=64, seed=None, name='--', **_):
         super().__init__(archive, x0, iso_sigma, line_sigma, bounds, batch_size, seed)
+        self.name = name
 
 
 class ImprovementEmitter(ImprovementEmitter):
-    def __init__(self, archive, x0, sigma0, selection_rule="filter", restart_rule="no_improvement", weight_rule="truncation", bounds=None, batch_size=None, seed=None):
+    def __init__(self, archive, x0, sigma0, selection_rule="filter", restart_rule="no_improvement", weight_rule="truncation", bounds=None, batch_size=None, seed=None, name='--', **_):
         super().__init__(archive, x0, sigma0, selection_rule, restart_rule, weight_rule, bounds, batch_size, seed)
         self.pulse = np.zeros((1,3), int) # NOT_ADDED | IMPROVE | NEW
+        self.name = name
+
 
 
     def tell(self, solutions, objective_values, behavior_values, metadata=None):

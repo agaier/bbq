@@ -15,15 +15,15 @@ class Arm(RibsDomain):
     See planar_arm.ipynb for details and illustration.
 
     """
-    def __init__(self, p, seed=0, slope=2.0):
+    def __init__(self, p, slope=1.5, seed=None, uniform_init=True):
         RibsDomain.__init__(self, p) 
-        self.slope = slope # 1: 100% alive, 1.25: 80% alive, 1.5: 66% alive, 2: 50% alive
+        self.uniform_init = uniform_init
+        self.slope = slope # 1: 100% active, 1.5: 66% active, 2: 50% active
         self.param_bounds = p['param_bounds'] 
-        if seed is None:
-            self.offset = np.ones(self.n_dof)*0.5
-        else:
-            self.offset = np.random.rand(self.n_dof)
-            print(self.offset)
+        if seed is not None:
+            np.random.seed(seed)            
+        self.offset = np.random.rand(self.n_dof)
+        print(self.offset)
     
     def _fitness(self, pheno): 
         norm_theta = (pheno+math.pi)/(2*math.pi)
@@ -50,15 +50,18 @@ class Arm(RibsDomain):
         Returns:
             [NxM np_array]: Initial solutions
         """
-        #initial_solutions = np.random.rand(n_solutions, self.n_dof)
-        initial_solutions = np.random.randn(n_solutions, self.n_dof)
+        if self.uniform_init:
+            initial_solutions = np.random.rand(n_solutions, self.n_dof)
+        else:
+            # Normal distributed solutions between 0 and 1
+            rand_start = 0.5+np.random.randn(n_solutions, self.n_dof)*0.2
+            initial_solutions = np.clip(rand_start,0,1)
         return initial_solutions    
 
     def prep_eval(self, p):
-        client = create_dask_client(p['n_workers']) 
+        client = None
         return client
 
-    def batch_eval(self, xx, client):
-        objs, bcs, pheno = dask_eval(xx, self.evaluate, client) 
-        metas = pheno
-        return objs, bcs, metas
+    def batch_eval(self, xx, client=None):
+        objs, descs, pheno = zip(*[self.evaluate(x) for x in xx])
+        return objs, descs, pheno

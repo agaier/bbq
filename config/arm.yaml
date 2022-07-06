@@ -1,0 +1,40 @@
+task_name: 'arm'
+
+# -- Domain -- #
+n_dof: 500
+param_bounds: [0, 1]
+desc_bounds:
+- [0, 1]
+- [0, 1]
+
+desc_labels:
+- X-Coord
+- Y-Coord
+
+emitters:
+  -
+    name: "Imp1"
+    type: "Improvement"
+    n_batch: 50
+    sigma0: 0.01
+  -
+    name: "Imp2"
+    type: "Improvement"
+    n_batch: 50
+    sigma0: 0.01
+  # -
+  #   name: "Imp3"
+  #   type: "Improvement"
+  #   n_batch: 25
+  #   sigma0: 0.01    
+  # -
+  #   name: "Imp4"
+  #   type: "Improvement"
+  #   n_batch: 25
+  #   sigma0: 0.01        
+
+# -- Logging -- #
+print_rate: 1  # Print to console
+plot_rate: 10  # Plot graphs
+save_rate: 50  # Save archive
+

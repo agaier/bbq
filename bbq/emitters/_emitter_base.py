@@ -5,7 +5,7 @@ from abc import ABC, abstractmethod
 import numpy as np
 from ribs.emitters._emitter_base import EmitterBase
 
-class EmitterBase(EmitterBase):
+class BBQ_EmitterBase(EmitterBase):
     """Base class for emitters in BBQ:
 
     As vanilla pyribs but with:

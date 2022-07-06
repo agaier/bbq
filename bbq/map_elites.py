@@ -8,19 +8,20 @@ from ribs.optimizers import Optimizer
 
 # BBQ Helpers
 from bbq.archives import GridArchive
-from bbq.create_emitter import create_emitter
+from bbq.emitters._init_emitters import init_emitters
 
 def map_elites(d, p, logger, 
                     emitter_type=IsoLineEmitter, archive_type=GridArchive):
     # - Setup -----------------------------------------------------------------#
-    archive = archive_type(p)                               # stores solutions
-    emitter = create_emitter(emitter_type, archive, p)      # creates solutions
-    opt = Optimizer(archive, emitter)                       # MAP-Elites
-    evaluator = d.prep_eval(p)                              # evaluation stack
-
-    # - Bootstrap with initial solutions
+    # : Initial solutions
     start_xx = d.init(p['n_init'])
+    evaluator = d.prep_eval(p)                              # evaluation stack
     objs, descs, metas = d.batch_eval(start_xx, evaluator)
+
+    # : Setup emitters and archive
+    archive = archive_type(p)      
+    emitters = init_emitters(p, archive, start_xx)
+    opt = Optimizer(archive, emitters)                      
     archive.add_batch(start_xx, objs, descs, metas)
 
     # - Main Loop -------------------------------------------------------------#

@@ -47,6 +47,7 @@ class RibsDomain():
             [NxM np_array]: Initial solutions
         """
         initial_solutions = np.random.rand(n_solutions, self.n_dof)
+        #initial_solutions = np.ones((n_solutions, self.n_dof))*0.5
         return initial_solutions        
 
     def prep_eval(self, p):
