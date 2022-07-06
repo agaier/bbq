@@ -39,6 +39,8 @@ def plot_ys(x, ys, labels, ax=None, reverse_y=False):
                 bbox_to_anchor=(0.5, -0.125), shadow=True)   
     return host
 
+# -- ---------------------------------------------------------------------- -- #
+# TODO: Make these into nice jupyerlab usable functions
 # Image
 def map_to_image(Z, ax=None):
     if ax is None:
