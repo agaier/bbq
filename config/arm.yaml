@@ -1,7 +1,7 @@
 task_name: 'arm'
 
 # -- Domain -- #
-n_dof: 500
+n_dof: 200
 param_bounds: [0, 1]
 desc_bounds:
 - [0, 1]
@@ -16,12 +16,12 @@ emitters:
     name: "Imp1"
     type: "Improvement"
     n_batch: 50
-    sigma0: 0.01
+    sigma0: 0.005
   -
     name: "Imp2"
     type: "Improvement"
     n_batch: 50
-    sigma0: 0.01
+    sigma0: 0.005
   # -
   #   name: "Imp3"
   #   type: "Improvement"

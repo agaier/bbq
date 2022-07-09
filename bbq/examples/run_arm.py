@@ -7,9 +7,9 @@ from ribs.emitters import GaussianEmitter
 from ribs.emitters import IsoLineEmitter
 from ribs.emitters import ImprovementEmitter
 
-def run_me(domain, p, archive_type=GridArchive):
+def run_me(domain, p):
     logger = RibsLogger(p, clear=False)
-    archive = map_elites(domain, p, logger, archive_type=archive_type)    
+    archive = map_elites(domain, p, logger)    
     print(domain.offset)
     print('\n[*] Done')
 
@@ -25,11 +25,11 @@ if __name__ == '__main__':
     p = create_config(base_config, exp_config)
 
     p['exp_name'] = 'Uniform Init - Rand Offset'
-    domain = Arm(p, seed=0, slope=2)
+    domain = Arm(p, seed=0, slope=1.5)
     run_me(domain, p)
 
     p['exp_name'] = 'Normal Init - Rand Offset'
-    domain = Arm(p, seed=0, slope=2, uniform_init=False)
+    domain = Arm(p, seed=0, slope=1.5, uniform_init=False)
     run_me(domain, p)
 
     p['exp_name'] = 'Uniform Init - No Offset'

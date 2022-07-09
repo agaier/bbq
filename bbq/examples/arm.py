@@ -54,9 +54,9 @@ class Arm(RibsDomain):
             initial_solutions = np.random.rand(n_solutions, self.n_dof)
         else:
             # Normal distributed solutions between 0 and 1
-            rand_start = 0.5+np.random.randn(n_solutions, self.n_dof)*0.2
+            rand_start = 0.5+np.random.randn(n_solutions, self.n_dof)*0.005
             initial_solutions = np.clip(rand_start,0,1)
-        return initial_solutions    
+        return initial_solutions
 
     def prep_eval(self, p):
         client = None
