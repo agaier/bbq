@@ -13,23 +13,31 @@ def launch_instance(id=2, rep=1):
 
     if id == 1:    
         p['exp_name'] = 'Uniform Init - Rand Offset'
-        domain = Arm(p, seed=0, slope=2)
+        domain = Arm(p, seed=0, slope=1.5)
         run_me(domain, p)
-        
+            
     elif id == 2:
         p['exp_name'] = 'Normal Init - Rand Offset'
-        domain = Arm(p, seed=0, slope=2, uniform_init=False)
+        domain = Arm(p, seed=0, slope=1.5, uniform_init=False)
         run_me(domain, p)
 
     elif id == 3:
         p['exp_name'] = 'Uniform Init - No Offset'
         domain = Arm(p, seed=0, slope=1)
-        run_me(domain, p)      
+        run_me(domain, p)   
 
     elif id == 4:
         p['exp_name'] = 'Normal Init - No Offset'
         domain = Arm(p, seed=0, slope=1, uniform_init=False)
-        run_me(domain, p)    
+        run_me(domain, p)  
 
 if __name__ == '__main__':
     fire.Fire(launch_instance)
+
+
+
+
+
+
+
+  
