@@ -1,0 +1,11 @@
+emitters:
+  -
+    name: "Imp1"
+    type: "Improvement"
+    n_batch: 25
+    sigma0: 0.005
+  -
+    name: "Line1"
+    type: "Line"
+    n_batch: 25
+    sigma0: 0.005

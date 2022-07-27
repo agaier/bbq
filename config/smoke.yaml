@@ -8,6 +8,15 @@ grid_res: [10, 10]
 n_init: 20
 n_gens: 10
 
+
+emitters:
+  -
+    name: "Line1"
+    type: "Line"
+    n_batch: 50
+    sigma0: 0.005
+
+
 # -- Logging -- #
 print_rate:  1  # Print to console
 plot_rate:   10 # Plot graphs

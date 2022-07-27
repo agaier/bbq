@@ -1,7 +1,7 @@
 task_name: 'arm'
 
 # -- Domain -- #
-n_dof: 200
+n_dof: 8
 param_bounds: [0, 1]
 desc_bounds:
 - [0, 1]

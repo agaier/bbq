@@ -16,7 +16,7 @@ def run_me(domain, p, emitter_type=GaussianEmitter, archive_type=GridArchive):
     print('\n[*] Done')
 
 if __name__ == '__main__':
-    from bbq.examples.domain import Rastrigin
+    from bbq.examples.rastrigin import Rastrigin
     from bbq.examples.domain_obj import Rastrigin_obj
     from bbq.utils import create_config
     

@@ -1,26 +1,27 @@
 import numpy as np
-import inspect
+from bbq.parallel import create_dask_client, dask_eval
+
 
 # - Base Domains --------------------------------------------------------------#
 class RibsDomain():
-    def __init__(self, p):
-        self.n_dof  = p['n_dof']
-        self.n_desc = len(p['desc_bounds'])
+    def __init__(self, n_dof=1, n_workers=1, **_):
+        self.n_dof = n_dof
+        self.n_workers = n_workers
 
     def evaluate(self, x):
-            """ Evaluates a single individual, giving an objective and descriptor
-            value, along with any metadata to be saved (such as the full phenotype)
+        """ Evaluates a single individual, giving an objective and descriptor
+        value, along with any metadata to be saved (such as the full phenotype)
 
-            Args:
-                x ([numpy array]): Raw parameter values between 0 and 1
+        Args:
+            x ([numpy array]): Raw parameter values between 0 and 1
 
-            Returns:
-                obj, desc, pheno: objective, descriptor, metadata
-            """
-            pheno = self.express(x)
-            obj = self._fitness(pheno)
-            desc = self._desc(pheno)
-            return obj, desc, pheno
+        Returns:
+            obj, desc, pheno: objective, descriptor, metadata
+        """
+        pheno = self.express(x)
+        obj = self._fitness(pheno)
+        desc = self._desc(pheno)
+        return obj, desc, pheno
 
     def express(self, xx):
         """ This function turns the raw parameter values that the optimization
@@ -47,33 +48,28 @@ class RibsDomain():
             [NxM np_array]: Initial solutions
         """
         initial_solutions = np.random.rand(n_solutions, self.n_dof)
-        #initial_solutions = np.ones((n_solutions, self.n_dof))*0.5
         return initial_solutions        
 
-    def prep_eval(self, p):
+    def prep_eval(self, **_):
         """ Prepare evaluation if necessary: 
             - start up dask clients
             - set up file structures for external evaluators
             - or nothing, the results here will be used by batch eval
         """
-        return None
+        if self.n_workers == 1:
+            client = None
+        else:
+            print(f"[*] Starting dask client with {self.n_workers} workers...")
+            client = create_dask_client(self.n_workers)
+        return client
 
-    # def batch_eval(self, xx):
-    #     ''' Return objective and descriptor value of batch of solutions '''
-    #     if is_class(xx):
-    #         objs, descs, phenos = self.evaluate(xx)
-    #     elif len(xx.shape) == 1:
-    #         objs, descs, phenos = self.evaluate(xx)
-    #     else:
-    #         phenos = []
-    #         objs, descs = np.full(xx.shape[0],np.nan), \
-    #                     np.full((xx.shape[0],self.n_desc),np.nan)
-    #         for i, pheno in enumerate(xx):
-    #             objs[i], descs[i], pheno = self.evaluate(pheno) 
-    #             phenos.append(pheno)
-    #     return objs, descs, phenos
+    def batch_eval(self, xx, evaluator):
+        if self.n_workers == 1:
+            objs, descs, metas = zip(*[self.evaluate(x) for x in xx])
+        else:
+            objs, descs, metas = dask_eval(xx, self.evaluate, evaluator) 
+        return objs, descs, metas       
 
-# - Utility Functions ---------------------------------------------------------#
 
 def is_class(o):
     return hasattr(o, '__dict__')

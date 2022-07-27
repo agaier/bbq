@@ -13,10 +13,6 @@ class BBQ_EmitterBase(EmitterBase):
     -) Pulse: logging of emitter effectiveness in adding and improving solutions
     """
 
-    def __init__(self, archive, solution_dim, bounds):
-        EmitterBase.__init__(self, archive, solution_dim, bounds)
-        self.pulse = np.zeros((1,3), int) # NOT_ADDED | IMPROVE | NEW
-
     def tell(self, solutions, objective_values, behavior_values, metadata=None):
         """Inserts entries into the archive.
 

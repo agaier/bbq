@@ -15,7 +15,7 @@ def map_elites(d, p, logger,
     # - Setup -----------------------------------------------------------------#
     # : Initial solutions
     start_xx = d.init(p['n_init'])
-    evaluator = d.prep_eval(p)                              # evaluation stack
+    evaluator = d.prep_eval(**p)                              # evaluation stack
     objs, descs, metas = d.batch_eval(start_xx, evaluator)
 
     # : Setup emitters and archive

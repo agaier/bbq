@@ -1,5 +1,24 @@
 import yaml
 
+
+def load_config(config_files):
+    """ Combines yaml files into single configuration dict """
+    p = {}
+    for file in config_files:
+        yaml_dict = yaml.load(open(file, "r"), Loader=yaml.FullLoader)
+        p = {**p, **yaml_dict}
+    p['config_files'] = config_files
+    return p
+
+    p = yaml.load(open(base_file, "r"), Loader=yaml.FullLoader)
+    if exp_file is not None:
+        exp_config  = yaml.load(open(exp_file, "r"), Loader=yaml.FullLoader)
+        p = {**p, **exp_config}
+        p['exp_config_path'] = exp_file
+    p['base_config_path'] = base_file
+    return p
+
+
 def create_config(base_file, exp_file=None):
     """ Combines yaml files into single configuration dict """
     p = yaml.load(open(base_file, "r"), Loader=yaml.FullLoader)

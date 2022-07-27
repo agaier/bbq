@@ -1,6 +1,39 @@
 
-- Put grid numpy conversion in logger not archive
-- 'Baseline' option in logger to plot on top of known data
-- d.upkeep(archive, itr) # do something sometimes at end of loop
-    - restart dask, retrain vae, other miscellany
+VIS:
+[ ] Science/Retro style
+[ ] Grid numpy conversion function in logger not in archive
+[ ] Export archive np object with hyperparams and meta
+[ ] Jupyter notebook easy vis functions
+
+
+YAML:
+[√] create_config takes any number of yaml files
+[ ] Archives defined in yaml file
+
+
+Templates:
+[√] classes take arguments funneled in from p
+[√] BBQ base emitter multi-inheritance
+    [ ] feature request on pyribs to avoid having to do this for every one
+[√] BbqDomain -- n_workers == 1, or list batch eval
+
+Emitters:
+[ ] Reflect into bounds instead of clip
+
+Examples:
+[√] Rastrigin [list]
+[√] Arm [list]
+[ ] Lander [dask]
+[√] Test file for all domains
+[ ] Readme file for all domains
+
+[ ] CPPN [object]
+[ ] TO [custom init]
     
+Infra:
+[ ] Version #, conda env with pyribs version (0.31)
+[ ] Pip/conda
+
+Catch up:
+[√] Update for pyribs 0.4.0
+[ ] Update base archives to new version

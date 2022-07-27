@@ -3,7 +3,7 @@ import fire
 from matplotlib import pyplot as plt
 
 # Test Domain
-from bbq.examples.domain import Rastrigin
+from bbq.examples.rastrigin import Rastrigin
 
 class RastriginInd():
     def __init__(self, genome):
