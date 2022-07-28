@@ -33,7 +33,7 @@ emitters:
     sigma0: 0.005     
 
 # -- Logging -- #
-print_rate: 1  # Print to console
-plot_rate: 10  # Plot graphs
-save_rate: 50  # Save archive
+print_rate:   10  # Print to console
+plot_rate:   100  # Plot graphs
+save_rate:  1000  # Save archive
 
