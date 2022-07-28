@@ -62,13 +62,13 @@ class RibsLogger():
 
         if (itr%self.p['plot_rate']==0) or save_all:
             self.plot_metrics()
-            self.plot_obj(archive)
+            #self.plot_obj(archive)
             self.plot_pulse(emitter)
 
         if (itr%self.p['save_rate']==0) or save_all:
             #self.save_archive(archive, self.log_dir, export_meta=self.save_meta)
             #self.save_archive(archive, self.archive_dir, itr, export_meta=self.save_meta)
-            self.save_archive(archive, itr=itr, export_meta=self.save_meta)
+            #self.save_archive(archive, itr=itr, export_meta=self.save_meta)
             self.save_pulse(emitter)
 
     def save_pulse(self, emitter):        
@@ -189,3 +189,20 @@ class RibsLogger():
         file_name = Path(str(self.log_dir)+"_result")
         shutil.make_archive(file_name, 'zip', self.log_dir)
 
+
+
+    # TODO: Move to logger
+    # def as_numpy(self, include_metadata=False):
+    #     # Create array
+    #     grid_res = [len(a)-1 for a in self.boundaries]
+    #     n_channels = sum([1, self._behavior_dim, self.p['n_dof']])
+    #     np_archive = np.full(np.r_[grid_res, n_channels], np.nan)
+
+    #     # Fill array
+    #     # --> TODO: work on higher dim grids
+    #     for elite in self:
+    #         elite_stats = np.r_[elite.obj, elite.beh, elite.sol]
+    #         np_archive[elite.idx[0], elite.idx[1], :] = elite_stats
+    #     if not include_metadata:
+    #         return np_archive
+ 

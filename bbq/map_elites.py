@@ -3,25 +3,23 @@
 import time
 
 # PyRibs MAP-Elites Framework
-from ribs.emitters import IsoLineEmitter
 from ribs.optimizers import Optimizer
 
 # BBQ Helpers
-from bbq.archives import GridArchive
-from bbq.emitters._init_emitters import init_emitters
+from bbq.emitters._init_emitter import init_emitter
+from bbq.archives._init_archive import init_archive
 
-def map_elites(d, p, logger, 
-                    emitter_type=IsoLineEmitter, archive_type=GridArchive):
+def map_elites(d, p, logger):
     # - Setup -----------------------------------------------------------------#
     # : Initial solutions
     start_xx = d.init(p['n_init'])
-    evaluator = d.prep_eval(**p)                              # evaluation stack
+    evaluator = d.prep_eval(**p)   # initialize evaluation stack
     objs, descs, metas = d.batch_eval(start_xx, evaluator)
 
     # : Setup emitters and archive
-    archive = archive_type(p)      
-    emitters = init_emitters(p, archive, start_xx)
-    opt = Optimizer(archive, emitters)                      
+    archive = init_archive(p)
+    emitter = init_emitter(p, archive, start_xx)
+    opt = Optimizer(archive, emitter)                      
     archive.add_batch(start_xx, objs, descs, metas)
 
     # - Main Loop -------------------------------------------------------------#

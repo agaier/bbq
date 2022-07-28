@@ -1,9 +1,9 @@
 """Provides EmitterBase."""
 import itertools
-from abc import ABC, abstractmethod
 
 import numpy as np
 from ribs.emitters._emitter_base import EmitterBase
+
 
 class BBQ_EmitterBase(EmitterBase):
     """Base class for emitters in BBQ:

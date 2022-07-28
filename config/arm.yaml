@@ -3,14 +3,19 @@ task_name: 'arm'
 # -- Domain -- #
 n_dof: 8
 param_bounds: [0, 1]
-desc_bounds:
-- [0, 1]
-- [0, 1]
 
-desc_labels:
-- X-Coord
-- Y-Coord
+# -- Archives -- #
+archive:
+  type: "CVT"
+  n_bins: 350
+  desc_bounds:
+  - [0, 1]
+  - [0, 1]
+  desc_labels:
+  - X-Coord
+  - Y-Coord
 
+# -- Emitters -- #
 emitters:
   -
     name: "Imp1"
@@ -21,17 +26,7 @@ emitters:
     name: "Imp2"
     type: "Improvement"
     n_batch: 50
-    sigma0: 0.005
-  # -
-  #   name: "Imp3"
-  #   type: "Improvement"
-  #   n_batch: 25
-  #   sigma0: 0.01    
-  # -
-  #   name: "Imp4"
-  #   type: "Improvement"
-  #   n_batch: 25
-  #   sigma0: 0.01        
+    sigma0: 0.005     
 
 # -- Logging -- #
 print_rate: 1  # Print to console
