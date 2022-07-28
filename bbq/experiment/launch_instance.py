@@ -1,43 +1,22 @@
-from bbq.utils import create_config
-from bbq.examples.arm import Arm
-from bbq.examples.run_arm import run_me
+from bbq.logging.logger import RibsLogger
+from bbq.map_elites import map_elites
+from bbq.examples.planar_arm import PlanarArm  
+from bbq.utils import load_config
 import fire
 
-CONFIG_PATH = '../../config/'
+def launch_instance(id=2, rep=1):
+    # Experiment Setup
+    config_dir = 'config/'
+    base = 'arm.yaml'
+    exp_name = ['Gaussian', 'Line', 'CMA-ME', 'CMA+Line']
+    exp = ['gaus.yaml', 'line.yaml', 'cmame.yaml', 'cma_line.yaml']
 
-
-def launch_instance(id=2, rep=1):   
-    base_config = CONFIG_PATH + 'arm.yaml'
-    exp_config  = CONFIG_PATH + 'test.yaml'
-    p = create_config(base_config, exp_config)
-
-    if id == 1:    
-        p['exp_name'] = 'Uniform Init - Rand Offset'
-        domain = Arm(p, seed=0, slope=1.5)
-        run_me(domain, p)
-            
-    elif id == 2:
-        p['exp_name'] = 'Normal Init - Rand Offset'
-        domain = Arm(p, seed=0, slope=1.5, uniform_init=False)
-        run_me(domain, p)
-
-    elif id == 3:
-        p['exp_name'] = 'Uniform Init - No Offset'
-        domain = Arm(p, seed=0, slope=1)
-        run_me(domain, p)   
-
-    elif id == 4:
-        p['exp_name'] = 'Normal Init - No Offset'
-        domain = Arm(p, seed=0, slope=1, uniform_init=False)
-        run_me(domain, p)  
+    # Run Experiments
+    p = load_config([config_dir+base, config_dir+exp[id]])
+    p['exp_name'] = exp_name[id]
+    logger = RibsLogger(p, rep=rep)
+    domain = PlanarArm(**p)
+    archive = map_elites(domain, p, logger)
 
 if __name__ == '__main__':
     fire.Fire(launch_instance)
-
-
-
-
-
-
-
-  

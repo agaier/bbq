@@ -1,0 +1,22 @@
+# -- Emitters -- #
+emitters:
+  -
+    name: "CMAME_08"
+    type: "Improvement"
+    n_batch: 25
+    sigma0: 0.08
+  -
+    name: "CMAME_04"
+    type: "Improvement"
+    n_batch: 25
+    sigma0: 0.04
+  -
+    name: "CMAME_02"
+    type: "Improvement"
+    n_batch: 25
+    sigma0: 0.02
+  -
+    name: "CMAME_01"
+    type: "Improvement"
+    n_batch: 25
+    sigma0: 0.01        

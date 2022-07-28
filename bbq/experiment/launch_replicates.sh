@@ -1,5 +1,5 @@
 #!/bin/bash
-for id in {1..4}
+for id in {0..3}
 do
     for rep in {0..5}
     do

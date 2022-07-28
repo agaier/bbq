@@ -1,5 +1,7 @@
 import numpy as np
-from bbq.emitters._standard_emitters import ImprovementEmitter, IsoLineEmitter, GaussianEmitter
+from bbq.emitters._standard_emitters import (GaussianEmitter,
+                                             ImprovementEmitter,
+                                             IsoLineEmitter)
 from bbq.emitters.obj_emitter import ObjEmitter
 
 emitter_lookup = {'Improvement' : ImprovementEmitter, 
