@@ -1,5 +1,5 @@
 """Gaussian Emitter from PyRibs with BBQ logging"""
-from bbq.emitters._emitter_base import BBQ_EmitterBase
+from bbq.emitters._emitter_base import Bbq_EmitterBase
 from ribs.emitters._gaussian_emitter import GaussianEmitter
 from ribs.emitters._iso_line_emitter import IsoLineEmitter
 from ribs.emitters._improvement_emitter import ImprovementEmitter
@@ -9,19 +9,19 @@ from ribs.archives import AddStatus
 import numpy as np
 
 
-class GaussianEmitter(GaussianEmitter, BBQ_EmitterBase):
+class GaussianEmitter(GaussianEmitter, Bbq_EmitterBase):
     def __init__(self, archive, x0, sigma0, bounds=None, batch_size=64, seed=None, name='--', **_):
         super().__init__(archive, x0, sigma0, bounds, batch_size, seed)
         self.name = name
 
 
-class IsoLineEmitter(IsoLineEmitter, BBQ_EmitterBase):
+class IsoLineEmitter(IsoLineEmitter, Bbq_EmitterBase):
     def __init__(self, archive, x0, iso_sigma=0.01, line_sigma=0.2, bounds=None, batch_size=64, seed=None, name='--', **_):
         super().__init__(archive, x0, iso_sigma, line_sigma, bounds, batch_size, seed)
         self.name = name
 
 
-class ImprovementEmitter(ImprovementEmitter, BBQ_EmitterBase):
+class ImprovementEmitter(ImprovementEmitter, Bbq_EmitterBase):
     def __init__(self, archive, x0, sigma0, selection_rule="filter", restart_rule="no_improvement", weight_rule="truncation", bounds=None, batch_size=None, seed=None, name='--', **_):
         super().__init__(archive, x0, sigma0, selection_rule, restart_rule, weight_rule, bounds, batch_size, seed)
         self.name = name

@@ -1,6 +1,5 @@
 import yaml
 
-
 def load_config(config_files):
     """ Combines yaml files into single configuration dict """
     p = {}

@@ -1,11 +1,6 @@
 exp_name: 'test'
 
-
-# -- Domain -- #
-#n_dof: 8
-
 # -- MAP-Elites -- #
-grid_res: [20, 20]
 n_init: 100
 n_gens: 500
 

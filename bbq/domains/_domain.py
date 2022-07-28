@@ -1,9 +1,9 @@
 import numpy as np
-from bbq.parallel import create_dask_client, dask_eval
+from bbq.domains._parallel import create_dask_client, dask_eval
 
 
 # - Base Domains --------------------------------------------------------------#
-class RibsDomain():
+class BbqDomain():
     def __init__(self, n_dof=1, n_workers=1, **_):
         self.n_dof = n_dof
         self.n_workers = n_workers

@@ -1,15 +1,12 @@
-import numpy as np
-
-# Test Domain
 import math
-from bbq.domains._domain import RibsDomain
+import numpy as np
+from bbq.domains._domain import BbqDomain
 from bbq.utils import scale
-from bbq.parallel import create_dask_client, dask_eval
 
-class Rastrigin(RibsDomain):
+class Rastrigin(BbqDomain):
     def __init__(self, param_bounds=[-5.12, 5.12], **kwargs):
         self.param_bounds = param_bounds
-        RibsDomain.__init__(self, **kwargs)        
+        BbqDomain.__init__(self, **kwargs)        
     
     def _fitness(self, x):        
         f = 10 * x.shape[0] + (x * x - 10 * np.cos(2 * math.pi * x)).sum()

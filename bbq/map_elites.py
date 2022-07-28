@@ -1,13 +1,10 @@
 """ General MAP-Elites flow using BBQ 
 """
 import time
-
-# PyRibs MAP-Elites Framework
 from ribs.optimizers import Optimizer
-
-# BBQ Helpers
-from bbq.emitters._init_emitter import init_emitter
 from bbq.archives._init_archive import init_archive
+from bbq.emitters._init_emitter import init_emitter
+
 
 def map_elites(d, p, logger):
     # - Setup -----------------------------------------------------------------#

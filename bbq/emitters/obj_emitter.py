@@ -4,17 +4,15 @@
 
 """
 import numpy as np
-from bbq.emitters._emitter_base import BBQ_EmitterBase
+from bbq.emitters._emitter_base import Bbq_EmitterBase
 
-
-
-class ObjEmitter(BBQ_EmitterBase):
+class ObjEmitter(Bbq_EmitterBase):
     """Emits solutions by calling object class mutate function on 
          existing archive solutions.
     """
 
     def __init__(self, archive, mut_p, batch_size=64, seed=None, name='--', **_):
-        BBQ_EmitterBase.__init__(self, archive, 1, None)
+        Bbq_EmitterBase.__init__(self, archive, 1, None)
         self.name = name
         self._p = mut_p
         self._batch_size = batch_size
@@ -46,5 +44,4 @@ class ObjEmitter(BBQ_EmitterBase):
                 for _ in range(self._batch_size)
             ]
         children = [parent.mutate(self._p) for parent in parents]
-
         return children
