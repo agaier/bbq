@@ -9,7 +9,7 @@ def read(fname):
 setup(
     name="bbq",
 
-    description="Tasty add-ons for pyRibs.",
+    description="Tasty front end for PyRibs.",
 
     author="Adam Gaier",
 
@@ -17,5 +17,15 @@ setup(
 
     long_description=read('README.md'),
 
-    version="0.0.2",
+    version="0.1.0",
+
+    install_requires=[
+        'ribs==0.4.0',
+        'dask>=2.0.0',
+        "distributed>=2.0.0",
+        'fire>=0.4.0',
+        'humanfriendly>=10.0',
+        'numpy>=1.17.0',
+        'matplotlib>=3.0.0',
+    ]
 )

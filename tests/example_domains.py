@@ -42,6 +42,7 @@ if __name__ == '__main__':
     emitter_config = config_dir+'line_cma_mix.yaml'
     p = load_config([base_config, exp_config, emitter_config])
     p['exp_name'] = 'mixed_emitter'
+    p['n_workers'] = 2 # To test parallel
     logger = RibsLogger(p)
     domain = PlanarArm(**p)
     archive = map_elites(domain, p, logger)    
