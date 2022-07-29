@@ -18,13 +18,13 @@ archive:
 # -- Emitters -- #
 emitters:
   -
-    name: "Imp1"
-    type: "Improvement"
+    name: "CMA-1"
+    type: "Cma"
     n_batch: 50
     sigma0: 0.005
   -
-    name: "Imp2"
-    type: "Improvement"
+    name: "CMA-2"
+    type: "Cma"
     n_batch: 50
     sigma0: 0.005     
 

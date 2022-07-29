@@ -1,13 +1,11 @@
 import numpy as np
-from bbq.emitters._standard_emitters import (GaussianEmitter,
-                                             ImprovementEmitter,
-                                             IsoLineEmitter)
-from bbq.emitters.obj_emitter import ObjEmitter
+from bbq.emitters._standard_emitters import (Bbq_Cma, Bbq_Gauss, Bbq_Line,
+                                             Bbq_Object)
 
-emitter_lookup = {'Improvement' : ImprovementEmitter, 
-                  'Line'        : IsoLineEmitter,
-                  'Gaussian'    : GaussianEmitter,
-                  'Object'      : ObjEmitter
+emitter_lookup = {'Cma'    : Bbq_Cma, 
+                  'Line'   : Bbq_Line,
+                  'Gauss'  : Bbq_Gauss,
+                  'Object' : Bbq_Object
                   }
 
 def init_emitter(p, archive, start_xx=None):

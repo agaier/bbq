@@ -1,11 +1,6 @@
 # -- Emitters -- #
 emitters:
   -
-    name: "Gaus_08"
-    type: "Gaussian"
-    n_batch: 25
-    sigma0: 0.08
-  -
     name: "Gaus_04"
     type: "Gaussian"
     n_batch: 25
@@ -20,3 +15,8 @@ emitters:
     type: "Gaussian"
     n_batch: 25
     sigma0: 0.01        
+  -
+    name: "Gaus_005"
+    type: "Gaussian"
+    n_batch: 25
+    sigma0: 0.005   

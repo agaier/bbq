@@ -5,13 +5,17 @@ import numpy as np
 from ribs.emitters._emitter_base import EmitterBase
 
 
-class Bbq_EmitterBase(EmitterBase):
+class Bbq_Emitter():
     """Base class for emitters in BBQ:
 
     As vanilla pyribs but with:
     
     -) Pulse: logging of emitter effectiveness in adding and improving solutions
     """
+    def __init__(self, name):
+        self.name  = name
+        self.pulse = np.zeros((1,3), int)
+
 
     def tell(self, solutions, objective_values, behavior_values, metadata=None):
         """Inserts entries into the archive.

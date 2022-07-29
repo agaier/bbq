@@ -23,7 +23,7 @@ archive:
 emitters:
   -
     name: "Gaussian1"
-    type: "Gaussian"
+    type: "Gauss"
     n_batch: 50
     sigma0: 0.01
 

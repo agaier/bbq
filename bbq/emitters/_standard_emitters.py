@@ -1,31 +1,33 @@
 """Gaussian Emitter from PyRibs with BBQ logging"""
-from bbq.emitters._emitter_base import Bbq_EmitterBase
+#from bbq.emitters._emitter_base import Bbq_EmitterBase
+from bbq.emitters._emitter_base import Bbq_Emitter
 from ribs.emitters._gaussian_emitter import GaussianEmitter
 from ribs.emitters._iso_line_emitter import IsoLineEmitter
 from ribs.emitters._improvement_emitter import ImprovementEmitter
+from ribs.emitters._emitter_base import EmitterBase
 
 import itertools
 from ribs.archives import AddStatus
 import numpy as np
 
 
-class GaussianEmitter(GaussianEmitter, Bbq_EmitterBase):
+class Bbq_Gauss(Bbq_Emitter, GaussianEmitter):
     def __init__(self, archive, x0, sigma0, bounds=None, batch_size=64, seed=None, name='--', **_):
-        super().__init__(archive, x0, sigma0, bounds, batch_size, seed)
-        self.name = name
+        GaussianEmitter.__init__(self, archive, x0, sigma0, bounds, batch_size, seed=None)
+        Bbq_Emitter.__init__(self, name)
 
-
-class IsoLineEmitter(IsoLineEmitter, Bbq_EmitterBase):
+class Bbq_Line(Bbq_Emitter, IsoLineEmitter):
     def __init__(self, archive, x0, iso_sigma=0.01, line_sigma=0.2, bounds=None, batch_size=64, seed=None, name='--', **_):
-        super().__init__(archive, x0, iso_sigma, line_sigma, bounds, batch_size, seed)
-        self.name = name
+        IsoLineEmitter.__init__(self, archive, x0, iso_sigma, line_sigma, 
+                                bounds, batch_size, seed)
+        Bbq_Emitter.__init__(self, name)
 
-
-class ImprovementEmitter(ImprovementEmitter, Bbq_EmitterBase):
+class Bbq_Cma(Bbq_Emitter, ImprovementEmitter):
     def __init__(self, archive, x0, sigma0, selection_rule="filter", restart_rule="no_improvement", weight_rule="truncation", bounds=None, batch_size=None, seed=None, name='--', **_):
-        super().__init__(archive, x0, sigma0, selection_rule, restart_rule, weight_rule, bounds, batch_size, seed)
-        self.name = name
-
+        ImprovementEmitter.__init__(self, archive, x0, sigma0, selection_rule, 
+                                      restart_rule, weight_rule, bounds, 
+                                      batch_size, seed)
+        Bbq_Emitter.__init__(self, name)
 
     def tell(self, solutions, objective_values, behavior_values, metadata=None):
         """Gives the emitter results from evaluating solutions.
@@ -79,6 +81,41 @@ class ImprovementEmitter(ImprovementEmitter, Bbq_EmitterBase):
             self.opt.reset(new_x0)
             self._restarts += 1
                     
+class Bbq_Object(Bbq_Emitter, EmitterBase):
+    """Emits solutions by calling object class mutate function on 
+         existing archive solutions.
+    """
 
-        
+    def __init__(self, archive, mut_p, batch_size=64, seed=None, name='--', **_):
+        EmitterBase.__init__(self, archive, 1, None)
+        Bbq_Emitter.__init__(self, name)
+        self._p = mut_p
+        self._batch_size = batch_size
+        self._rng = np.random.default_rng(seed)
 
+    @property
+    def p(self):
+        """Mutation parameters"""
+        return self._p
+
+    @property
+    def batch_size(self):
+        """int: Number of solutions to return in :meth:`ask`."""
+        return self._batch_size
+
+    def ask(self):
+        """Creates solutions by calling object class mutate function 
+
+        Returns:
+            ``(batch_size)`` array -- contains ``batch_size`` new solutions to 
+                                      evaluate.
+        """
+        if self.archive.empty:
+            raise ValueError("Cannot ask on empty archive")
+        else:
+            parents = [
+                self.archive.get_random_elite().sol[0]
+                for _ in range(self._batch_size)
+            ]
+        children = [parent.mutate(self._p) for parent in parents]
+        return children

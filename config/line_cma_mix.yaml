@@ -1,7 +1,7 @@
 emitters:
   -
-    name: "Imp1"
-    type: "Improvement"
+    name: "CMA-1"
+    type: "Cma"
     n_batch: 25
     sigma0: 0.005
   -

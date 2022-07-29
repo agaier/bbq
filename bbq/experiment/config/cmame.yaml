@@ -1,11 +1,6 @@
 # -- Emitters -- #
 emitters:
   -
-    name: "CMAME_08"
-    type: "Improvement"
-    n_batch: 25
-    sigma0: 0.08
-  -
     name: "CMAME_04"
     type: "Improvement"
     n_batch: 25
@@ -20,3 +15,8 @@ emitters:
     type: "Improvement"
     n_batch: 25
     sigma0: 0.01        
+  -
+    name: "CMAME_005"
+    type: "Improvement"
+    n_batch: 25
+    sigma0: 0.005    
