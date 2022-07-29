@@ -27,5 +27,6 @@ setup(
         'humanfriendly>=10.0',
         'numpy>=1.17.0',
         'matplotlib>=3.0.0',
+        'SciencePlots'
     ]
 )
