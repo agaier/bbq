@@ -179,10 +179,9 @@ class RibsLogger():
         plt.clf(); plt.close()
 
     def copy_config(self):
-        #config_paths = [self.p['base_config_path'], self.p['exp_config_path']]
-        for config_file in self.p['config_files']:
+        for i, config_file in enumerate(self.p['config_files']):
             src = Path(config_file)
-            dest = self.log_dir/src.name
+            dest = self.log_dir/f'{i}_{src.name}'
             shutil.copy(str(src), str(dest)) # for python <3.8
 
     def zip_results(self):
