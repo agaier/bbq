@@ -63,7 +63,7 @@ class BbqDomain():
             client = create_dask_client(self.n_workers)
         return client
 
-    def batch_eval(self, xx, evaluator):
+    def batch_eval(self, xx, evaluator=None):
         if self.n_workers == 1:
             objs, descs, metas = zip(*[self.evaluate(x) for x in xx])
         else:
