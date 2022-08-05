@@ -19,5 +19,5 @@ n_gens: 10
 # -- Logging -- #
 print_rate:  1  # Print to console
 plot_rate:   10 # Plot graphs
-save_rate:   10  # Save archive
+save_rate:   3  # Save archive
 
