@@ -66,9 +66,7 @@ class RibsLogger():
             self.plot_pulse(emitter)
 
         if (itr%self.p['save_rate']==0) or save_all:
-            #self.save_archive(archive, self.log_dir, export_meta=self.save_meta)
-            #self.save_archive(archive, self.archive_dir, itr, export_meta=self.save_meta)
-            #self.save_archive(archive, itr=itr, export_meta=self.save_meta)
+            self.save_archive(archive, itr=itr)
             self.save_pulse(emitter)
 
     def save_pulse(self, emitter):        
@@ -107,8 +105,40 @@ class RibsLogger():
         plt.savefig(fname,bbox_inches='tight')
         plt.clf(); plt.close()
 
-            
+    def archive_to_numpy(self, archive):
+        grid_res = [len(a)-1 for a in archive.boundaries]
+        n_beh    = archive._behavior_dim        
 
+        if archive.use_objects:
+            genome_archive = np.full(np.r_[grid_res, 1], np.nan, dtype=object)
+        else:
+            genome_archive = np.full(np.r_[grid_res, self.p['n_dof']], np.nan)
+        fit_archive    = np.full(np.r_[grid_res, 1], np.nan)
+        desc_archive   = np.full(np.r_[grid_res, n_beh], np.nan)
+        meta_archive   = np.full(np.r_[grid_res, 1], np.nan, dtype=object)
+
+        for elite in archive:
+            fit_archive   [elite.idx[0], elite.idx[1],:] = elite.obj
+            desc_archive  [elite.idx[0], elite.idx[1],:] = elite.beh
+            genome_archive[elite.idx[0], elite.idx[1],:] = elite.sol
+            meta_archive  [elite.idx[0], elite.idx[1],:] = [elite.meta]
+
+        archive_dict = {'fit': fit_archive,    'desc': desc_archive, 
+                        'x'  : genome_archive, 'meta': meta_archive}
+        return archive_dict
+        
+    def save_archive(self, archive, itr=''):  
+        ''' Saves archive as a set of numpy files'''
+        outdir = self.archive_dir
+        if hasattr(archive, 'boundaries'):
+            archive_dict = self.archive_to_numpy(archive)
+            for key, value in archive_dict.items():
+                np.save(outdir / f'{key}_{itr}.npy', value)
+                np.save(outdir / f'_{key}.npy', value)
+        else:
+            archive_pandas = archive.as_pandas(include_metadata=True)
+            archive_pandas.to_pickle(outdir / f'archive_{itr}.pd')
+            archive_pandas.to_pickle(outdir / f'_archive.pd')
 
     def update_metrics(self, archive, itr):
         ''' Adds current iterations metrics to running record '''        
@@ -142,28 +172,7 @@ class RibsLogger():
         plt.savefig(fname,bbox_inches='tight')
         plt.clf(); plt.close()
 
-    def save_archive(self, archive, itr='', f_type='numpy', export_meta=True):  
-        ''' Saves entire archive as a pandas file, optionally w/metadata '''             
-        outdir = self.archive_dir
-        if f_type == 'numpy':
-            out_archive = archive.as_numpy(include_metadata=export_meta)
-            out_archive = np.rollaxis(out_archive,-1)
-            if export_meta:
-                np.save(outdir / f'archive_{itr}.npy', out_archive[0])
-                np.save(outdir / f'archive_meta_{itr}.npy', out_archive[1])
-                np.save(outdir / f'archive.npy', out_archive[0])
-                np.save(outdir / f'archive_meta.npy', out_archive[1])
-            else:
-                np.save(outdir / f'archive_{itr}.npy', out_archive)
-                np.save(outdir / f'archive.npy', out_archive)
-
-        elif f_type == 'pandas':
-            final_archive = archive.as_pandas(include_metadata=True)
-            final_archive.to_pickle(outdir / f'archive_{itr}.pd')
-        else:
-            raise ValueError("Invalid file type for archive (numpy/pandas)")     
-
-    
+     
 
     def plot_obj(self, archive):
         labels = ['Fitness']
