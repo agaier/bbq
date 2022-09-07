@@ -2,7 +2,7 @@ task_name: 'rastrigin'
 
 # -- Optimization -- #
 n_init: 100
-n_gens: 50
+n_gens: 500
 
 # -- Parameters -- #
 n_dof: 10
@@ -24,12 +24,17 @@ emitters:
   -
     name: "Gaussian1"
     type: "Gauss"
-    n_batch: 50
+    batch_size: 25
     sigma0: 0.01
+  -
+    name: "Gaussian2"
+    type: "Gauss"
+    batch_size: 25
+    sigma0: 0.05    
 
 
 # -- Logging -- #
-print_rate: 1  # Print to console
-plot_rate: 10  # Plot graphs
+print_rate: 5  # Print to console
+plot_rate: 25  # Plot graphs
 save_rate: 50  # Save archive
 

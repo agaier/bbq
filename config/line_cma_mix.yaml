@@ -1,11 +1,14 @@
+exp_name: 'line_cma_mix'
+
 emitters:
   -
     name: "CMA-1"
     type: "Cma"
-    n_batch: 25
+    batch_size: 25
     sigma0: 0.005
   -
     name: "Line1"
     type: "Line"
-    n_batch: 25
-    sigma0: 0.005
+    batch_size: 25
+    iso_sigma: 0.005
+    line_sigma: 0.1

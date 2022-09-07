@@ -4,12 +4,14 @@ from bbq.logging.logger import RibsLogger
 from bbq.map_elites import map_elites
 
 if __name__ == '__main__':
-    config_dir = '../config/'
+    #config_dir = '../config/'
+    config_dir = 'config/'
     from bbq.utils import load_config
     exp_config  = config_dir+'smoke.yaml'    
+    exp_config  = config_dir+'test.yaml'    
 
     # -- Test Domains ----------------------------------------------------- -- #
-    # Rastrigin    
+    # - Rastrigin with Gaussian
     print("\n[*] Rastrigin on Grid w/ Gaussian Emitter")
     from bbq.examples.rastrigin import Rastrigin
     base_config = config_dir+'rast.yaml'
@@ -25,7 +27,17 @@ if __name__ == '__main__':
     p = load_config([base_config, exp_config])
     logger = RibsLogger(p)
     domain = Rastrigin_Obj(**p)
-    archive = map_elites(domain, p, logger)    
+    archive = map_elites(domain, p, logger)  
+
+    # - Rastrigin with Object Genome on CVT
+    print("\n[*] Rastrigin on CVT as Individual Object w/ Gaussian Mutation")
+    from bbq.examples.rastrigin import Rastrigin_Obj
+    base_config = config_dir+'rast_obj.yaml'
+    cvt_config = config_dir+'rast_cvt_obj.yaml'
+    p = load_config([base_config, exp_config, cvt_config])
+    logger = RibsLogger(p)
+    domain = Rastrigin_Obj(**p)
+    archive = map_elites(domain, p, logger)          
 
     # - Planar Arm
     print("\n[*] Planar Arm on CVT w/Improvement Emitters")

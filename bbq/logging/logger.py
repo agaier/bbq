@@ -3,10 +3,10 @@ from pathlib import Path
 import json
 import shutil
 import numpy as np
-from bbq.logging.plotting import  map_to_image, set_map_grid, plot_ys
+from bbq.logging.plotting import  map_to_image, set_map_grid, plot_ys, view_map
 from humanfriendly import format_timespan
 import pickle
-
+from bbq.logging.vis import plot_stats, plot_pulse
 
 
 class RibsLogger():
@@ -55,15 +55,15 @@ class RibsLogger():
         emitter = opt.emitters
         self.update_metrics(archive, itr)
         if (itr%self.p['print_rate'] == 0) or self.p['print_rate'] == 1:
-            n_evals = sum([emitter['n_batch'] for emitter in self.p['emitters']])
+            n_evals = sum([emitter['batch_size'] for emitter in self.p['emitters']])
             self.print_metrics(archive, itr, n_evals, time)  
             with (self.log_dir / f"metrics.json").open("w") as file:
                 json.dump(self.metrics, file, indent=2)        
 
         if (itr%self.p['plot_rate']==0) or save_all:
             self.plot_metrics()
-            #self.plot_obj(archive)
-            self.plot_pulse(emitter)
+            self.plot_obj(archive)
+            self.plot_pulses(emitter)
 
         if (itr%self.p['save_rate']==0) or save_all:
             self.save_archive(archive, itr=itr)
@@ -75,32 +75,11 @@ class RibsLogger():
         with open(self.log_dir / 'emitter_pulse.pkl', 'wb') as f:
             pickle.dump(pulses, f)
 
-    def plot_pulse(self, emitter):
+    def plot_pulses(self, emitter):
         # - Prep Data
         pulses = [e.pulse[1:,:] for e in emitter] # skip 0th
         if np.sum(np.stack(pulses)) == 0: return # no pulse data for emitters
-        def norm_pulse(pulse):
-            n_children  = np.sum(pulse,axis=1)
-            norm_factor = np.tile(n_children,(3,1)).T
-            pulse /= norm_factor
-            return pulse
-        stat = [norm_pulse(np.array(p)) for p in pulses]
-        
-        # - Plot Data
-        rows = int(np.ceil(len(stat)/2))
-        fig,ax = plt.subplots(nrows=rows,ncols=2,figsize=(8,4),dpi=100)
-        ax = ax.flatten()
-        event_label = ['NOT ADDED', 'IMPROVED', 'DISCOVERED']
-        emitter_label = [em.name for em in emitter]
-        for i, pulse in enumerate(stat):
-            x = np.arange(len(pulse))
-            y = pulse
-            ax[i].stackplot(x, y[:,0], y[:,1], y[:,2], labels=event_label)
-            ax[i].set_title(f"Iso Sigma: {emitter_label[i]}")
-
-        plt.subplots_adjust(hspace=0.5)
-        ax[-2].legend(loc='upper center', bbox_to_anchor=(1.1, -0.2), 
-                   fancybox=True, shadow=True, ncol=3)        
+        fig, ax = plot_pulse(pulses, self.p)     
         fname = str(self.log_dir / "emitter_pulse.png")
         plt.savefig(fname,bbox_inches='tight')
         plt.clf(); plt.close()
@@ -113,12 +92,12 @@ class RibsLogger():
             genome_archive = np.full(np.r_[grid_res, 1], np.nan, dtype=object)
         else:
             genome_archive = np.full(np.r_[grid_res, self.p['n_dof']], np.nan)
-        fit_archive    = np.full(np.r_[grid_res, 1], np.nan)
+        fit_archive    = np.full(np.r_[grid_res], np.nan)
         desc_archive   = np.full(np.r_[grid_res, n_beh], np.nan)
         meta_archive   = np.full(np.r_[grid_res, 1], np.nan, dtype=object)
 
         for elite in archive:
-            fit_archive   [elite.idx[0], elite.idx[1],:] = elite.obj
+            fit_archive   [elite.idx[0], elite.idx[1]] = elite.obj
             desc_archive  [elite.idx[0], elite.idx[1],:] = elite.beh
             genome_archive[elite.idx[0], elite.idx[1],:] = elite.sol
             meta_archive  [elite.idx[0], elite.idx[1],:] = [elite.meta]
@@ -156,34 +135,21 @@ class RibsLogger():
         print(f"Iter: {itr}" \
             +f" | Eval: {itr*eval_per_iter}" \
             +f" | Size: {archive.stats.num_elites}" \
-            +f" | QD: {np.round(qd)}" \
+            +f" | QD: {qd}" \
             +f" | Time/Itr: {format_timespan(time)}")         
 
     def plot_metrics(self):
-        ''' Line plot of archive size and QD Score ''' 
-        _, ax = plt.subplots(figsize=(8,5),dpi=150)
-        x = np.array(self.metrics['QD Score']['itrs'])
-        ys = np.c_[np.array(self.metrics['Archive Size']['vals'][1:]),
-                    np.array(self.metrics['QD Score']['vals'])]     
-        labels = ["Archive Size"]+["QD Score"]     
-        ax = plot_ys(x, ys, labels, ax=ax) # <-- the actual plotting
+        ''' Line plot of recorded metrics ''' 
+        fig, ax = plot_stats(self.metrics, self.p)
         fname = str(self.log_dir / "LINE_Metrics.png")
-        ax.set_title(self.p['exp_name'])
         plt.savefig(fname,bbox_inches='tight')
         plt.clf(); plt.close()
 
-     
-
     def plot_obj(self, archive):
-        labels = ['Fitness']
-        A = np.rollaxis(archive.as_numpy(),-1)
-        val = A[0]
-        fig,ax = plt.subplots(nrows=1,ncols=1,figsize=(4,4),dpi=150)
-        ax = map_to_image(val, ax=ax)
-        ax = set_map_grid(ax, val, **self.p) 
-        ax.set(xlabel = self.p['desc_labels'][0], 
-               ylabel= self.p['desc_labels'][1])
-        plt.subplots_adjust(hspace=0.4)
+        archive_dict = self.archive_to_numpy(archive)
+        fig,ax = plt.subplots(figsize=(4,4),dpi=150)
+        ax = view_map(archive_dict['fit'], self.p['archive'], ax=ax)
+        ax.set_title("Fitness")
         fig.savefig(str(self.log_dir / f"MAP_Fitness.png"))
         plt.clf(); plt.close()
 
@@ -196,21 +162,3 @@ class RibsLogger():
     def zip_results(self):
         file_name = Path(str(self.log_dir)+"_result")
         shutil.make_archive(file_name, 'zip', self.log_dir)
-
-
-
-    # TODO: Move to logger
-    # def as_numpy(self, include_metadata=False):
-    #     # Create array
-    #     grid_res = [len(a)-1 for a in self.boundaries]
-    #     n_channels = sum([1, self._behavior_dim, self.p['n_dof']])
-    #     np_archive = np.full(np.r_[grid_res, n_channels], np.nan)
-
-    #     # Fill array
-    #     # --> TODO: work on higher dim grids
-    #     for elite in self:
-    #         elite_stats = np.r_[elite.obj, elite.beh, elite.sol]
-    #         np_archive[elite.idx[0], elite.idx[1], :] = elite_stats
-    #     if not include_metadata:
-    #         return np_archive
- 

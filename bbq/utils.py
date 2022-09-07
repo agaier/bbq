@@ -1,7 +1,9 @@
 import yaml
 
 def load_config(config_files):
-    """ Combines yaml files into single configuration dict """
+    """ Combines yaml files into single configuration dict 
+    *Note*: Later fields overwrite earlier
+    """
     p = {}
     for file in config_files:
         yaml_dict = yaml.load(open(file, "r"), Loader=yaml.FullLoader)

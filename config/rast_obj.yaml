@@ -25,7 +25,7 @@ emitters:
   -
     name: "Obj1"
     type: "Object"
-    n_batch: 50
+    batch_size: 50
     mut_p:      
       iso_sigma: 0.01
 

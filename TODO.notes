@@ -1,39 +1,66 @@
+README:
+[√] Philosophy
+[√] Install and simple run
+[√] Auto visualization
+[√] Designing domains
+[ ] Result exploration
+[ ] Experiments
+
+
 
 VIS:
-[ ] Science/Retro style
-[ ] Grid numpy conversion function in logger not in archive
-[ ] Export archive np object with hyperparams and meta
+[√] Science/Retro style
+[√] Grid numpy conversion function in logger not in archive
+[ ] Pulse as json
+[ ] Add max fitness to plots
 [ ] Jupyter notebook easy vis functions
-
+    [√] Single stats
+        [ ] Max fitness w/Mean
+        [ ] Magnify/inset last 15% 
+    [√] Pulse
+    [√] View Map
+    [ ] Replicates for single / multiple experiments
+    [ ] Downsample (by fit / feature)
+    [ ] Vis individual / batch
+    [ ] Vis individuals in downsampled map
+[ ] Running vis
+    [√] Plots
+    [√] Fitness Map
+    [ ] Pulse 
+    [ ] Downsampled individualsls
+[ ] MPL Contexts for each chart
+[ ] Set up includes installing contexts
 
 YAML:
 [√] create_config takes any number of yaml files
-[ ] Archives defined in yaml file
-
+[√] Archives defined in yaml file
+[√] is_object as yaml option
+    [√] toggle at init to avoid reclassing?
 
 Templates:
 [√] classes take arguments funneled in from p
 [√] BBQ base emitter multi-inheritance
-    [ ] feature request on pyribs to avoid having to do this for every one
 [√] BbqDomain -- n_workers == 1, or list batch eval
-
-Emitters:
-[ ] Reflect into bounds instead of clip
 
 Examples:
 [√] Rastrigin [list]
 [√] Arm [list]
-[ ] Lander [dask]
 [√] Test file for all domains
-[ ] Readme file for all domains
-
+--- stretch --
+[ ] Lander [dask]
 [ ] CPPN [object]
-[ ] TO [custom init]
+[ ] TO [custom init, jax?]
     
 Infra:
-[ ] Version #, conda env with pyribs version (0.31)
-[ ] Pip/conda
+[√] Version #, conda env cross platform
+[√] Pip/conda
+[√] Fresh environment on both machines
 
 Catch up:
 [√] Update for pyribs 0.4.0
-[ ] Update base archives to new version
+[√] Update base archives to new version
+
+Pull/Feature Requests:
+[ ] Reflection or projection for bound constraints
+[ ] 'Pulse' and name for emitters
+[ ] Initial objective values set as nan not empty

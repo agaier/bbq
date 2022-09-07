@@ -50,27 +50,53 @@ def map_to_image(Z, ax=None):
     ax.invert_yaxis()
     return ax
 
+def view_map(Z, p, ax=None, bin_ticks=False):
+    if ax is None:
+        fig,ax = plt.subplots(figsize=(4,4),dpi=150)    
+    with plt.style.context('me_grid'):        
+        im = ax.imshow(Z, cmap='YlGnBu')
+
+        # Colorbar
+        divider = make_axes_locatable(ax)
+        cax = divider.append_axes("right", size="5%", pad=0.1)
+        cb = plt.colorbar(im, cax=cax)
+        for t in cb.ax.get_yticklabels():
+            t.set_horizontalalignment('right')   
+            t.set_x(3.0)
+
+        # Grid
+        set_map_grid(ax, Z, bin_ticks=bin_ticks, **p)
+        
+        ax.set(xlabel = p['desc_labels'][0], ylabel= p['desc_labels'][1])
+                
+    return ax
+
 # Ticks
-def set_map_grid(ax, Z, desc_bounds=0, grid_res=0, **_):
+def set_map_grid(ax, Z, bin_ticks=False, desc_bounds=0, grid_res=0, **_):
     map_x, map_y = Z.shape[0], Z.shape[1]
     xticks = -0.5+np.arange(map_x)
     yticks = -0.5+np.arange(map_y)  
 
     xlabels = np.linspace(desc_bounds[0][0],
-                          desc_bounds[0][1],
-                          grid_res[0])
+                        desc_bounds[0][1],
+                        grid_res[0])
 
     ylabels = np.linspace(desc_bounds[1][0],
-                          desc_bounds[1][1],
-                          grid_res[1])
+                        desc_bounds[1][1],
+                        grid_res[1])
     xlabels = np.round(xlabels,1).astype(int)
     ylabels = np.round(ylabels,0).astype(int)    
 
     abbrev_xlabels = ['']*map_x
     abbrev_ylabels = ['']*map_y
 
-    abbrev_xlabels[0], abbrev_xlabels[-1] = xlabels[0], xlabels[-1]
-    abbrev_ylabels[0], abbrev_ylabels[-1] = ylabels[0], ylabels[-1]
+    if bin_ticks:
+        skip = 3
+        abbrev_xlabels[::skip] = np.arange(0, map_x, skip)
+        abbrev_ylabels[::skip] = np.arange(0, map_y, skip)
+    else:
+        abbrev_xlabels[1], abbrev_xlabels[-1] = xlabels[0], xlabels[-1]
+        abbrev_ylabels[1], abbrev_ylabels[-1] = ylabels[0], ylabels[-1]
 
     x_formatter, x_locator = FixedFormatter(abbrev_xlabels), FixedLocator(xticks)
     y_formatter, y_locator = FixedFormatter(abbrev_ylabels), FixedLocator(yticks)
@@ -82,6 +108,28 @@ def set_map_grid(ax, Z, desc_bounds=0, grid_res=0, **_):
     ax.yaxis.set_major_formatter(y_formatter)
 
     grid_thick = 15/np.max(Z.shape)
-    ax.grid(color="silver", alpha=.8, linewidth=grid_thick)
+    #ax.grid(color="silver", alpha=.8, linewidth=grid_thick)
+    ax.grid(linewidth=grid_thick)
     ax.tick_params(direction="in", width=grid_thick, length=grid_thick*4)
+    return ax
+
+from mpl_toolkits.axes_grid1 import make_axes_locatable
+def view_map(Z, p, ax=None, bin_ticks=False):
+    if ax is None:
+        fig,ax = plt.subplots(figsize=(4,4),dpi=150)    
+    with plt.style.context('me_grid'):        
+        im = ax.imshow(Z, cmap='YlGnBu')
+
+        # Colorbar
+        divider = make_axes_locatable(ax)
+        cax = divider.append_axes("right", size="5%", pad=0.1)
+        cb = plt.colorbar(im, cax=cax)
+        for t in cb.ax.get_yticklabels():
+            t.set_horizontalalignment('right')   
+            t.set_x(3.0)
+
+        # Grid
+        set_map_grid(ax, Z, bin_ticks=bin_ticks, **p)        
+        ax.set(xlabel = p['desc_labels'][0], ylabel= p['desc_labels'][1])
+                
     return ax

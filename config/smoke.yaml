@@ -4,7 +4,7 @@ exp_name: 'smoke'
 n_workers: 1
 
 # -- MAP-Elites -- #
-n_init: 20
+n_init: 25
 n_gens: 10
 
 
@@ -12,12 +12,12 @@ n_gens: 10
 #   -
 #     name: "Line1"
 #     type: "Line"
-#     n_batch: 50
-#     sigma0: 0.005
+#     batch_size: 50
+#     iso_sigma: 0.005
 
 
 # -- Logging -- #
 print_rate:  1  # Print to console
-plot_rate:   10 # Plot graphs
-save_rate:   3  # Save archive
+plot_rate:   5  # Plot graphs
+save_rate:   10 # Save archive
 
