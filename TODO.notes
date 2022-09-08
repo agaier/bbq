@@ -6,13 +6,11 @@ README:
 [ ] Result exploration
 [ ] Experiments
 
-
-
 VIS:
 [√] Science/Retro style
 [√] Grid numpy conversion function in logger not in archive
-[ ] Pulse as json
-[ ] Add max fitness to plots
+[√] Add max fitness to mean plots
+[√] Report improvement ad % of batch
 [ ] Jupyter notebook easy vis functions
     [√] Single stats
         [ ] Max fitness w/Mean
@@ -26,10 +24,10 @@ VIS:
 [ ] Running vis
     [√] Plots
     [√] Fitness Map
-    [ ] Pulse 
-    [ ] Downsampled individualsls
+    [√] Pulse 
+    [ ] Downsampled individuals
 [ ] MPL Contexts for each chart
-[ ] Set up includes installing contexts
+[ ] Set up includes installing contexts (https://github.com/garrettj403/SciencePlots/blob/master/setup.py)
 
 YAML:
 [√] create_config takes any number of yaml files

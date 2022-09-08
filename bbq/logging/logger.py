@@ -6,7 +6,7 @@ import numpy as np
 from bbq.logging.plotting import  map_to_image, set_map_grid, plot_ys, view_map
 from humanfriendly import format_timespan
 import pickle
-from bbq.logging.vis import plot_stats, plot_pulse
+from bbq.logging.vis import plot_stats, plot_pulse, norm_pulse
 
 
 class RibsLogger():
@@ -18,14 +18,22 @@ class RibsLogger():
             "Archive Size": {
                 "itrs": [0],
                 "vals": [0],  # Starts at 0.
+                "label": ['Filled Bins'],
             },
-            "Mean Fitness": {
+            "Fitness": {
                 "itrs": [],
                 "vals": [],  # Does not start at 0.
-            },      
+                "label": ['Mean Fitness', 'Max Fitness'],
+            },                  
             "QD Score": {
                 "itrs": [],
                 "vals": [],  # Does not start at 0.
+                "label": ['QD Score'],
+            },    
+            "Improvement Ratio": {
+                "itrs": [],
+                "vals": [],  # Does not start at 0.
+                "label": ['Improvement'],
             },              
         }       
         # Reset log folder
@@ -53,7 +61,7 @@ class RibsLogger():
         ''' Calls all logging and visualization functions '''
         archive = opt.archive
         emitter = opt.emitters
-        self.update_metrics(archive, itr)
+        self.update_metrics(archive, emitter, itr)
         if (itr%self.p['print_rate'] == 0) or self.p['print_rate'] == 1:
             n_evals = sum([emitter['batch_size'] for emitter in self.p['emitters']])
             self.print_metrics(archive, itr, n_evals, time)  
@@ -73,7 +81,7 @@ class RibsLogger():
         pulses = [e.pulse[1:,:] for e in emitter] # skip 0
         if np.sum(np.stack(pulses)) == 0: return # no pulse data for emitters
         with open(self.log_dir / 'emitter_pulse.pkl', 'wb') as f:
-            pickle.dump(pulses, f)
+            pickle.dump(pulses, f)         
 
     def plot_pulses(self, emitter):
         # - Prep Data
@@ -119,23 +127,32 @@ class RibsLogger():
             archive_pandas.to_pickle(outdir / f'archive_{itr}.pd')
             archive_pandas.to_pickle(outdir / f'_archive.pd')
 
-    def update_metrics(self, archive, itr):
+    def update_metrics(self, archive, emitter, itr):
         ''' Adds current iterations metrics to running record '''        
+        fitness = [archive.stats.obj_mean, np.nanmax(archive._objective_values)]
+        pulses = [e.pulse[1:,:] for e in emitter]
+        combined_pulse = np.sum(pulses,axis=0)
+        imp_ratio = np.sum(combined_pulse[-1][:2])/np.sum(combined_pulse[-1])
+
         self.metrics["Archive Size"]["itrs"].append(itr)
         self.metrics["Archive Size"]["vals"].append(archive.stats.num_elites)
-        self.metrics["Mean Fitness"]["itrs"].append(itr)
-        self.metrics["Mean Fitness"]["vals"].append(archive.stats.obj_mean)
+        self.metrics["Fitness"]["itrs"].append(itr)
+        self.metrics["Fitness"]["vals"].append(fitness)      
         self.metrics["QD Score"]["itrs"].append(itr)
         self.metrics["QD Score"]["vals"].append(archive.stats.qd_score)   
+        self.metrics["Improvement Ratio"]["itrs"].append(itr)
+        self.metrics["Improvement Ratio"]["vals"].append(imp_ratio)
 
     def print_metrics(self, archive, itr, eval_per_iter, time):
         ''' Print metrics to command line '''    
         # TODO: add improvement as % of batch
         qd = np.array(self.metrics['QD Score']['vals'][-1])
-        print(f"Iter: {itr}" \
+        imp_ratio = self.metrics["Improvement Ratio"]["vals"][-1]
+        print(f"Iter: {str(itr).rjust(3, '0')}" \
             +f" | Eval: {itr*eval_per_iter}" \
             +f" | Size: {archive.stats.num_elites}" \
-            +f" | QD: {qd}" \
+            +f" | QD: {qd:E}" \
+            +f" | Imp Ratio: {imp_ratio:.2f}" \
             +f" | Time/Itr: {format_timespan(time)}")         
 
     def plot_metrics(self):

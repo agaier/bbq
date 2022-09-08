@@ -29,12 +29,13 @@ def plot_stats(data, p):
     with plt.style.context(['science','retro','notebook','y_grid']):
         fig, ax = plt.subplots(ncols=3, figsize=(15,3))
         eval_per_iter = sum([e['batch_size'] for e in p['emitters']])
-
-        for i, stat in enumerate(data.keys()):
+        
+        for i, stat in enumerate(list(data.keys())[:3]):
             x = np.array(data[stat]['itrs'])*eval_per_iter
             ax[i].plot(x, data[stat]['vals'])
             ax[i].set_title(stat)     
             ax[i].ticklabel_format(style='sci', axis='x', scilimits=(0,0))
+            ax[i].legend(data[stat]['label'])
 
         arch_size = max_bins(p)
         ax[0].yaxis.set_major_formatter(ticker.PercentFormatter(xmax=arch_size, decimals=0))
