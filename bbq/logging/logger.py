@@ -88,11 +88,12 @@ class RibsLogger():
         pulses = [e.pulse[1:,:] for e in emitter] # skip 0th
         if np.sum(np.stack(pulses)) == 0: return # no pulse data for emitters
         fig, ax = plot_pulse(pulses, self.p)     
-        fname = str(self.log_dir / "emitter_pulse.png")
+        fname = str(self.log_dir / "PULSE_emitter.png")
         plt.savefig(fname,bbox_inches='tight')
         plt.clf(); plt.close()
 
     def archive_to_numpy(self, archive):
+        """Only works for grid archives"""
         grid_res = [len(a)-1 for a in archive.boundaries]
         n_beh    = archive._behavior_dim        
 
@@ -105,7 +106,7 @@ class RibsLogger():
         meta_archive   = np.full(np.r_[grid_res, 1], np.nan, dtype=object)
 
         for elite in archive:
-            fit_archive   [elite.idx[0], elite.idx[1]] = elite.obj
+            fit_archive   [elite.idx[0], elite.idx[1]]   = elite.obj
             desc_archive  [elite.idx[0], elite.idx[1],:] = elite.beh
             genome_archive[elite.idx[0], elite.idx[1],:] = elite.sol
             meta_archive  [elite.idx[0], elite.idx[1],:] = [elite.meta]
@@ -145,7 +146,6 @@ class RibsLogger():
 
     def print_metrics(self, archive, itr, eval_per_iter, time):
         ''' Print metrics to command line '''    
-        # TODO: add improvement as % of batch
         qd = np.array(self.metrics['QD Score']['vals'][-1])
         imp_ratio = self.metrics["Improvement Ratio"]["vals"][-1]
         print(f"Iter: {str(itr).rjust(3, '0')}" \

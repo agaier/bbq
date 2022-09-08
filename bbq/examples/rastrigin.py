@@ -10,7 +10,7 @@ class Rastrigin(BbqDomain):
     
     def _fitness(self, x):        
         f = 10 * x.shape[0] + (x * x - 10 * np.cos(2 * math.pi * x)).sum()
-        return -f + 2*x.shape[0]**2 # Scale to make QD score increasing
+        return -f + 2*x.shape[0]**2 # Shift to make QD score increasing
     
     def _desc(self, x):
         return np.array(x[0:2])
