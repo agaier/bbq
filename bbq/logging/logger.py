@@ -7,6 +7,7 @@ from bbq.logging.plotting import  map_to_image, set_map_grid, plot_ys, view_map
 from humanfriendly import format_timespan
 import pickle
 from bbq.logging.vis import plot_stats, plot_pulse, norm_pulse
+from ribs.visualize import cvt_archive_heatmap
 
 
 class RibsLogger():
@@ -94,6 +95,8 @@ class RibsLogger():
 
     def archive_to_numpy(self, archive):
         """Only works for grid archives"""
+        if not hasattr(archive, 'boundaries'):
+            return {}
         grid_res = [len(a)-1 for a in archive.boundaries]
         n_beh    = archive._behavior_dim        
 
@@ -163,10 +166,14 @@ class RibsLogger():
         plt.clf(); plt.close()
 
     def plot_obj(self, archive):
+        # TODO: clean up to be universal for archive types
         archive_dict = self.archive_to_numpy(archive)
         fig,ax = plt.subplots(figsize=(4,4),dpi=150)
-        ax = view_map(archive_dict['fit'], self.p['archive'], ax=ax)
-        ax.set_title("Fitness")
+        if (archive_dict):
+            ax = view_map(archive_dict['fit'], self.p['archive'], ax=ax)
+            ax.set_title("Fitness")
+        else: # if it is a CVT archive, use pyribs default for now:
+            cvt_archive_heatmap(archive, ax=ax, cmap='YlGnBu')
         fig.savefig(str(self.log_dir / f"MAP_Fitness.png"))
         plt.clf(); plt.close()
 

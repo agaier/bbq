@@ -1,0 +1,14 @@
+exp_name: 'cmame'
+
+# -- Emitters -- #
+emitters:
+  -
+    name: "CMA-1"
+    type: "Cma"
+    batch_size: 50
+    sigma0: 0.005
+  -
+    name: "CMA-2"
+    type: "Cma"
+    batch_size: 50
+    sigma0: 0.005    

@@ -1,0 +1,14 @@
+exp_name: 'gaussian'
+
+# -- Emitters -- #
+emitters:
+  -
+    name: "Gaussian1"
+    type: "Gauss"
+    batch_size: 50
+    sigma0: 0.01
+  -
+    name: "Gaussian2"
+    type: "Gauss"
+    batch_size: 50
+    sigma0: 0.05
