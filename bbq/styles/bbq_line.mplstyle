@@ -35,12 +35,12 @@ ytick.minor.visible : True
 ytick.right : True
 
 # Fontsizes
-xtick.labelsize : 16
-ytick.labelsize : 16
-legend.fontsize : 16
-legend.title_fontsize : 16
-axes.titlesize : 16
-axes.labelsize : 16
+xtick.labelsize : 12
+ytick.labelsize : 12
+legend.fontsize : 12
+legend.title_fontsize : 12
+axes.titlesize : 14
+axes.labelsize : 12
 
 # Set line widths
 axes.linewidth : 1

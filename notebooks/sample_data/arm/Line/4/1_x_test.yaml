@@ -1,0 +1,11 @@
+exp_name: 'test'
+
+# -- MAP-Elites -- #
+n_init: 100
+n_gens: 500
+
+# -- Logging -- #
+print_rate: 10  # Print to console
+plot_rate:  50  # Plot graphs
+save_rate:  500  # Save archive
+

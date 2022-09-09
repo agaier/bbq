@@ -16,14 +16,12 @@ def plot_ys(x, ys, labels, ax=None, reverse_y=False):
     # Set axis labels
     i=0
     host.set_xlabel("Iterations")
-
     p, = host.plot(x, ys[i], color=C[i], label=labels[i], linewidth=2, linestyle=':')
     lns = [p]
     host.set_ylabel('Archive Size')
     host.spines['left'].set_color(C[i])
     host.spines['left'].set_linewidth(3)
     host.yaxis.label.set_color(C[i])   
-
 
     for i, par in enumerate(pars,1):
         par.set_ylabel(labels[i])
@@ -40,7 +38,6 @@ def plot_ys(x, ys, labels, ax=None, reverse_y=False):
     return host
 
 # -- ---------------------------------------------------------------------- -- #
-# TODO: Make these into nice jupyerlab usable functions
 # Image
 def map_to_image(Z, ax=None):
     if ax is None:

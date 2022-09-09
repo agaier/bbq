@@ -25,27 +25,34 @@ def get_config_files(folder):
     return file_list[::-1]
 
 # High level plotting functions
-def plot_stats(data, p):
+def plot_stats(data, p, vertical=False, ax=None):
     with plt.style.context(['bbq_line']):
-        fig, ax = plt.subplots(ncols=3, figsize=(15,3))
-        eval_per_iter = sum([e['batch_size'] for e in p['emitters']])
-        
+        if ax is None:
+            if vertical:
+                fig, ax = plt.subplots(nrows=3, figsize=(5,15))
+                plt.subplots_adjust(hspace=0.3)
+            else:
+                fig, ax = plt.subplots(ncols=3, figsize=(15,5))           
+            
         for i, stat in enumerate(list(data.keys())[:3]):
-            x = np.array(data[stat]['itrs'])*eval_per_iter
-            ax[i].plot(x, data[stat]['vals'])
-            ax[i].set_title(stat)     
+            x = np.array(data[stat]['itrs']) # * eval_per_iter
+            ax[i].plot(data[stat]['itrs'], data[stat]['vals'])
+            ax[i].set_title(stat, fontsize=14)     
             ax[i].ticklabel_format(style='sci', axis='x', scilimits=(0,0))
             ax[i].legend(data[stat]['label'])
             if np.max(data[stat]['vals']) > 1000:
                 ax[i].ticklabel_format(style='sci', axis='y', scilimits=(0,0))
-
         arch_size = max_bins(p)
         ax[0].yaxis.set_major_formatter(ticker.PercentFormatter(xmax=arch_size, decimals=0))
         ax[0].set_ylim([0,arch_size*1.1])
         ax[0].yaxis.set_major_locator(ticker.FixedLocator(np.linspace(0.0,arch_size,5)))
 
+
         plt.setp(ax.flat, xlabel='Evaluations')
-    return fig, ax
+        for i in range(len(ax)):
+            ax[i].xaxis.label.set_size(14)
+        
+    return ax
 
 def plot_pulse(pulse, p):
     stat = [norm_pulse(np.array(p)) for p in pulse]
@@ -185,7 +192,6 @@ def set_map_grid(ax, Z, bin_ticks=False, desc_bounds=0, grid_res=0, **_):
     ax.tick_params(direction="out", width=grid_thick, length=grid_thick*2)
     return ax
 
-
 # Numerical utilities
 def norm_pulse(pulse):
     n_children  = np.sum(pulse,axis=1)
@@ -206,39 +212,3 @@ def max_bins(p):
     if archive['type'] == "CVT":
         return archive['n_bins']
     return ValueError("Invalid Archive Type -- can't calculate max bins")
-
-
-
-
-# -- ---------------------------------------------------------------------- -- #
-# # TODO: Make these into nice jupyerlab usable functions
-# # Image
-# def map_to_image(Z, ax=None):
-#     if ax is None:
-#         fig, ax = plt.subplots(figsize=(4,4), dpi=150)        
-#     img = ax.imshow(np.rollaxis(Z,1).astype(float), cmap='YlGnBu')
-#     cbar = plt.colorbar(img,ax=ax)
-#     ax.invert_yaxis()
-#     return ax
-
-# def view_map(Z, p, ax=None, bin_ticks=False):
-#     if ax is None:
-#         fig,ax = plt.subplots(figsize=(4,4),dpi=150)    
-#     with plt.style.context('me_grid'):        
-#         im = ax.imshow(Z, cmap='YlGnBu')
-
-#         # Colorbar
-#         divider = make_axes_locatable(ax)
-#         cax = divider.append_axes("right", size="5%", pad=0.1)
-#         cb = plt.colorbar(im, cax=cax)
-#         for t in cb.ax.get_yticklabels():
-#             t.set_horizontalalignment('right')   
-#             t.set_x(3.0)
-
-#         # Grid
-#         set_map_grid(ax, Z, bin_ticks=bin_ticks, **p)
-        
-#         ax.set(xlabel = p['desc_labels'][0], ylabel= p['desc_labels'][1])
-                
-#     return ax
-

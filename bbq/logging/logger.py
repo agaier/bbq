@@ -133,15 +133,17 @@ class RibsLogger():
         fitness = [archive.stats.obj_mean, np.nanmax(archive._objective_values)]
         pulses = [e.pulse[1:,:] for e in emitter]
         combined_pulse = np.sum(pulses,axis=0)
-        imp_ratio = np.sum(combined_pulse[-1][1:])/np.sum(combined_pulse[-1])
+        itr_evals = np.sum(combined_pulse[-1])
+        imp_ratio = np.sum(combined_pulse[-1][1:])/itr_evals
+        total_evals = self.metrics["Archive Size"]["itrs"][-1]+itr_evals
 
-        self.metrics["Archive Size"]["itrs"].append(itr)
+        self.metrics["Archive Size"]["itrs"].append(total_evals)
         self.metrics["Archive Size"]["vals"].append(archive.stats.num_elites)
-        self.metrics["Fitness"]["itrs"].append(itr)
+        self.metrics["Fitness"]["itrs"].append(total_evals)
         self.metrics["Fitness"]["vals"].append(fitness)      
-        self.metrics["QD Score"]["itrs"].append(itr)
+        self.metrics["QD Score"]["itrs"].append(total_evals)
         self.metrics["QD Score"]["vals"].append(archive.stats.qd_score)   
-        self.metrics["Improvement Ratio"]["itrs"].append(itr)
+        self.metrics["Improvement Ratio"]["itrs"].append(total_evals)
         self.metrics["Improvement Ratio"]["vals"].append(imp_ratio)
 
     def print_metrics(self, archive, itr, eval_per_iter, time):
@@ -157,7 +159,7 @@ class RibsLogger():
 
     def plot_metrics(self):
         ''' Line plot of recorded metrics ''' 
-        fig, ax = plot_stats(self.metrics, self.p)
+        fig, ax = plot_stats(self.metrics, self.p, vertical=True)
         fname = str(self.log_dir / "LINE_Metrics.png")
         plt.savefig(fname,bbox_inches='tight')
         plt.clf(); plt.close()

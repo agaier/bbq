@@ -3,8 +3,9 @@ README:
 [√] Install and simple run
 [√] Auto visualization
 [√] Designing domains
+[√] Experiments
 [ ] Result exploration
-[ ] Experiments
+
 
 VIS:
 [√] Science/Retro style
@@ -17,11 +18,12 @@ VIS:
         [√] Max fitness w/Mean
         [ ] Magnify/inset last 15% 
     [√] Pulse
-    [√] View Map
-    [ ] Replicates for single / multiple experiments
-    [ ] Downsample (by fit / feature)
-    [ ] Vis individual / batch
-    [ ] Vis individuals in downsampled map
+    [√] Itr records evaluations (or generations for pulse)
+    [√] Replicates for single / multiple experiments
+    [√] View Map    
+        [ ] Downsample (by fit / feature)
+        [ ] Vis individual / batch
+        [ ] Vis individuals in downsampled map
 [ ] Running vis
     [√] Plots
     [√] Fitness Map
@@ -29,6 +31,7 @@ VIS:
     [ ] Downsampled individuals
 [√] MPL Contexts for each chart
 [√] Set up includes installing contexts (https://github.com/garrettj403/SciencePlots/blob/master/setup.py)
+[ ] Reorganize Visualization Functions
 
 YAML:
 [√] create_config takes any number of yaml files
