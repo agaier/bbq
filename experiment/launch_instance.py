@@ -8,9 +8,9 @@ def launch_instance(id=2, rep=1):
     # Experiment Setup
     config_dir = '../config/'
     base = 'd_arm_grid.yaml'
-    #exp = 'x_test.yaml'
     exp = 'x_smoke.yaml' # test pipeline
-
+    exp = 'x_test.yaml'  # full experiment
+    
     exp_name = ['Gaussian', 'Line', 'CMA-ME', 'CMA+Line']
     emmiter = ['e_gauss.yaml', 'e_line.yaml', 'e_cmame.yaml', 'e_mixed.yaml']
 
