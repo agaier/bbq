@@ -26,7 +26,7 @@ def get_config_files(folder):
 
 # High level plotting functions
 def plot_stats(data, p):
-    with plt.style.context(['science','retro','notebook','y_grid']):
+    with plt.style.context(['bbq_line']):
         fig, ax = plt.subplots(ncols=3, figsize=(15,3))
         eval_per_iter = sum([e['batch_size'] for e in p['emitters']])
         
@@ -36,19 +36,21 @@ def plot_stats(data, p):
             ax[i].set_title(stat)     
             ax[i].ticklabel_format(style='sci', axis='x', scilimits=(0,0))
             ax[i].legend(data[stat]['label'])
+            if np.max(data[stat]['vals']) > 1000:
+                ax[i].ticklabel_format(style='sci', axis='y', scilimits=(0,0))
 
         arch_size = max_bins(p)
         ax[0].yaxis.set_major_formatter(ticker.PercentFormatter(xmax=arch_size, decimals=0))
         ax[0].set_ylim([0,arch_size*1.1])
         ax[0].yaxis.set_major_locator(ticker.FixedLocator(np.linspace(0.0,arch_size,5)))
 
-        plt.setp(ax.flat, xlabel='Iterations')
+        plt.setp(ax.flat, xlabel='Evaluations')
     return fig, ax
 
 def plot_pulse(pulse, p):
     stat = [norm_pulse(np.array(p)) for p in pulse]
-    with plt.style.context(['science','retro','notebook','y_grid']):
-        fig, ax = plt.subplots(ncols=len(p['emitters']),figsize=(15,3))
+    with plt.style.context(['bbq_line']):
+        fig, ax = plt.subplots(ncols=len(p['emitters']))
 
     event_label = ['Not Added', 'Improved', 'Discovered']
     for i, pulse in enumerate(stat):
@@ -64,10 +66,10 @@ def plot_pulse(pulse, p):
 
         ax[i].stackplot(x, y[:,0], y[:,1], y[:,2], labels=event_label)
         ax[i].set_title(p['emitters'][i]['name'], fontsize=16)
-        ax[i].set_ylim([0.8,1.0])
+        ax[i].set_ylim([0.75,1.0])
         ax[i].ticklabel_format(style='sci', axis='x', scilimits=(0,0))
         ax[i].yaxis.set_major_formatter(ticker.PercentFormatter(xmax=1, decimals=0))
-        ax[i].yaxis.set_major_locator(ticker.FixedLocator(np.linspace(0.8,1.0,5)))
+        ax[i].yaxis.set_major_locator(ticker.FixedLocator(np.linspace(0.75,1.0,6)))
 
         if i > 0:
             ax[i].set_yticklabels([])
