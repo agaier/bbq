@@ -1,0 +1,68 @@
+# Matplotlib style for scientific plotting
+# This is the base style for "SciencePlots"
+# see: https://github.com/garrettj403/SciencePlots
+
+# Set color cycle
+axes.prop_cycle : cycler('color', ['4165c0', 'e770a2', '5ac3be', '696969', 'f79a1e', 'ba7dcd'])
+
+# Set default figure size
+figure.figsize : 15, 3
+
+# Legend
+legend.frameon : True
+legend.framealpha : 1.0
+legend.fancybox : True
+legend.numpoints : 1
+
+
+# Set x axis
+xtick.direction : in
+xtick.major.size : 6
+xtick.major.width : 1
+xtick.minor.size : 3
+xtick.minor.width : 1
+xtick.minor.visible : True
+xtick.top : False
+
+
+# Set y axis
+ytick.direction : in
+ytick.major.size : 6
+ytick.major.width : 1
+ytick.minor.size : 3
+ytick.minor.width : 1
+ytick.minor.visible : True
+ytick.right : True
+
+# Fontsizes
+xtick.labelsize : 16
+ytick.labelsize : 16
+legend.fontsize : 16
+legend.title_fontsize : 16
+axes.titlesize : 16
+axes.labelsize : 16
+
+# Set line widths
+axes.linewidth : 1
+lines.linewidth : 2.
+
+# Grid lines
+axes.grid.axis: y
+axes.grid : True
+axes.axisbelow : True
+grid.linestyle : --
+grid.color : k
+grid.alpha : 0.5
+grid.linewidth : 0.5
+
+# Always save as 'tight'
+savefig.bbox : tight
+savefig.pad_inches : 0.05
+
+# Use sans-serif fonts
+font.family : sans-serif
+mathtext.fontset : dejavusans
+
+# Use LaTeX for math formatting
+text.usetex : False
+

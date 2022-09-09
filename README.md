@@ -4,8 +4,14 @@
 
 # BBQ. A Tasty Front-End for PyRibs.
 
+* [Purpose](#purpose)
+* [Installation](#installation)
+* [Workflow](#workflow)
+* [Problem Domains](#problem-domains)
+* [Configuration Files](#configuration-files)
+
 ## Purpose
-BBQ is a collection of scripts designed to reduce the amount of boilerplate needed for setting up new MAP-Elites domains with the PyRibs library without extensive knowledge of PyRibs or MAP-Elites. BBQ consists of:
+BBQ is a collection of scripts designed to reduce the amount of boilerplate needed for setting up new MAP-Elites domains with the PyRibs library without extensive knowledge of PyRibs or MAP-Elites. The core of BBQ is:
 
 - **Domain class:**  The only python code necessary to write is the optimization domain
 - **Configuration:** All algorithm settings are stored in a yaml file, allowing easy changes in a central human readable format, and for simpler handling of experiments
@@ -13,7 +19,7 @@ BBQ is a collection of scripts designed to reduce the amount of boilerplate need
 
 ## Installation
 
-Supported Python versions are 3.6 or later. For now just go in the base directory and:
+Supported Python versions are 3.6 or later. Just go in the base directory and:
 
 ```
 $ pip install -e .

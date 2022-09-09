@@ -1,0 +1,29 @@
+
+# Image
+image.cmap:            viridis
+image.origin:          lower
+image.lut : 8
+
+# Grid lines
+axes.grid.axis: y
+axes.grid : True
+axes.axisbelow : True
+grid.color : silver
+grid.alpha : 0.8
+xtick.top : False
+xtick.bottom : False
+ytick.left : False
+
+
+# Always save as 'tight'
+savefig.bbox : tight
+savefig.pad_inches : 0.05
+
+# Use sans-serif fonts
+font.family : sans-serif
+mathtext.fontset : dejavusans
+
+
+# Use LaTeX for math formatting
+text.usetex : False
+

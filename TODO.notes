@@ -11,9 +11,10 @@ VIS:
 [√] Grid numpy conversion function in logger not in archive
 [√] Add max fitness to mean plots
 [√] Report improvement ad % of batch
+    [√]  !!! NOT RIGHT !!!
 [ ] Jupyter notebook easy vis functions
     [√] Single stats
-        [ ] Max fitness w/Mean
+        [√] Max fitness w/Mean
         [ ] Magnify/inset last 15% 
     [√] Pulse
     [√] View Map
@@ -26,8 +27,8 @@ VIS:
     [√] Fitness Map
     [√] Pulse 
     [ ] Downsampled individuals
-[ ] MPL Contexts for each chart
-[ ] Set up includes installing contexts (https://github.com/garrettj403/SciencePlots/blob/master/setup.py)
+[√] MPL Contexts for each chart
+[√] Set up includes installing contexts (https://github.com/garrettj403/SciencePlots/blob/master/setup.py)
 
 YAML:
 [√] create_config takes any number of yaml files

@@ -37,10 +37,7 @@ class RibsLogger():
                 "label": ['Improvement'],
             },              
         }       
-        # Reset log folder
-        # if rep is None:
-        #     self.log_dir = Path(f'log/{p["task_name"]}/{p["exp_name"]}')
-        # else:
+        # Set log folders
         self.log_dir = Path(f'log/{p["task_name"]}/{p["exp_name"]}/{rep}')
         if clear:
             if self.log_dir.exists() and self.log_dir.is_dir():
@@ -136,7 +133,7 @@ class RibsLogger():
         fitness = [archive.stats.obj_mean, np.nanmax(archive._objective_values)]
         pulses = [e.pulse[1:,:] for e in emitter]
         combined_pulse = np.sum(pulses,axis=0)
-        imp_ratio = np.sum(combined_pulse[-1][:2])/np.sum(combined_pulse[-1])
+        imp_ratio = np.sum(combined_pulse[-1][1:])/np.sum(combined_pulse[-1])
 
         self.metrics["Archive Size"]["itrs"].append(itr)
         self.metrics["Archive Size"]["vals"].append(archive.stats.num_elites)

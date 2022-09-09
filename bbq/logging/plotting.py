@@ -117,7 +117,7 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 def view_map(Z, p, ax=None, bin_ticks=False):
     if ax is None:
         fig,ax = plt.subplots(figsize=(4,4),dpi=150)    
-    with plt.style.context('me_grid'):        
+    with plt.style.context('bbq_gridmap'):        
         im = ax.imshow(Z, cmap='YlGnBu')
 
         # Colorbar
