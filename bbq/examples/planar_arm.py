@@ -37,8 +37,7 @@ class PlanarArm(BbqDomain):
         return obj, desc, pheno        
 
 
-
-def visualize(solution, link_lengths, objective, ax):
+def visualize(solution, ax):
     """Plots an arm with the given angles and link lengths on ax.
     
     Args:
@@ -47,14 +46,15 @@ def visualize(solution, link_lengths, objective, ax):
         objective (float): The objective value of this solution.
         ax (plt.Axes): A matplotlib axis on which to display the arm.
 
-        Source: https://docs.pyribs.org/en/stable/tutorials/arm_repertoire.html
+        Adapted from: 
+            https://docs.pyribs.org/en/stable/tutorials/arm_repertoire.html
     """
-    lim = 1.05 * np.sum(link_lengths)  # Add a bit of a border.
+    #if np.isnan(solution): return
+    link_lengths = np.ones(len(solution))/len(solution)
+    lim = 1.05 * np.sum(link_lengths)
     ax.set_aspect("equal")
     ax.set_xlim(-lim, lim)
     ax.set_ylim(-lim, lim)
-    
-    ax.set_title(f"Objective: {objective}")
 
     # Plot each link / joint.
     pos = np.array([0, 0])  # Starting position of the next joint.
@@ -70,4 +70,6 @@ def visualize(solution, link_lengths, objective, ax):
     ax.plot(0, 0, "ro", ms=6)
     final_label = f"Final: ({pos[0]:.2f}, {pos[1]:.2f})"
     ax.plot(pos[0], pos[1], "go", ms=6, label=final_label)
+    ax.set_xticks([]); ax.set_yticks([])
     ax.legend()
+

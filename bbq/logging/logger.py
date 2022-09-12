@@ -3,7 +3,7 @@ from pathlib import Path
 import json
 import shutil
 import numpy as np
-from bbq.logging.plotting import  map_to_image, set_map_grid, plot_ys, view_map
+from bbq.logging.vis import view_map
 from humanfriendly import format_timespan
 import pickle
 from bbq.logging.vis import plot_stats, plot_pulse, norm_pulse

@@ -89,27 +89,33 @@ def plot_pulse(pulse, p):
               fancybox=True, shadow=True, ncol=3, fontsize=16)
     return fig, ax
 
-def plot_map(Z, p, ax=None, bin_ticks=False, n_colors=None):
+from matplotlib.colors import ListedColormap
+from matplotlib.ticker import FuncFormatter
+
+
+def plot_map(Z, p, ax=None, bin_ticks=False, n_colors=16, cmap='cividis'):
     if ax is None:
         fig,ax = plt.subplots(figsize=(4,4),dpi=150)    
-    with plt.style.context('me_grid'):        
-        if n_colors is None:
-            im = ax.imshow(Z, cmap='YlGnBu')
-        else:
-            cmap = cm.get_cmap('YlGnBu', n_colors)
-            im = ax.imshow(Z, cmap=cmap)
-        # Colorbar
+    with plt.style.context('bbq_gridmap'):      
+        cmap = cm.get_cmap(cmap, n_colors)
+        im = ax.imshow(Z, cmap=cmap, origin='lower')
+        # -- Colorbar
         divider = make_axes_locatable(ax)
         cax = divider.append_axes("right", size="5%", pad=0.1)
-        cb = plt.colorbar(im, cax=cax)
+        if n_colors < 12:
+            n_cticks = n_colors+1
+        else:
+            n_cticks = 5
+        fmt = lambda x, pos: '{:1.2}'.format(x)
+        c_ticks = np.linspace(np.nanmin(Z), np.nanmax(Z), n_cticks)
+        cb = plt.colorbar(im, cax=cax, ticks=c_ticks, format=FuncFormatter(fmt))
+        cb.ax.locator_params(nbins=n_colors)
         for t in cb.ax.get_yticklabels():
             t.set_horizontalalignment('right')   
             t.set_x(3.0)
-
-        # Grid
+        # -- rid
         set_map_grid(ax, Z, bin_ticks=bin_ticks, **p)        
-        ax.set(xlabel = p['desc_labels'][0], ylabel= p['desc_labels'][1])
-                
+        ax.set(xlabel = p['desc_labels'][0], ylabel= p['desc_labels'][1])                
     return ax
 
 # Multiple Quantities
@@ -119,7 +125,7 @@ def plot_ys(x, ys, labels, ax=None, reverse_y=False):
     else:
         host = ax
     ys= np.rollaxis(ys,1) # [quantities X series]
-    C = [plt.cm.Set2(c) for c in np.linspace(0,1,len(ys))][::-1] # Colors
+    C = [plt.cm.Set2(c) for c in np.linspace(0,1,len(ys))] # Colors
     pars = [host.twinx() for _ in range(len(ys[1:]))] # Create additional y scales
 
     # Set axis labels
@@ -191,6 +197,63 @@ def set_map_grid(ax, Z, bin_ticks=False, desc_bounds=0, grid_res=0, **_):
     ax.grid(linewidth=grid_thick)
     ax.tick_params(direction="out", width=grid_thick, length=grid_thick*2)
     return ax
+
+#matplotlib.axes.Axes.inset_axes
+#matplotlib.axes.Axes.indicate_inset_zoom
+
+def view_by_bin(coord, meta, visualize, ax, inset_coord=[1.5,0,1,1]):
+    solution = meta[coord][0]
+    axins = ax.inset_axes(inset_coord)
+    visualize(solution, ax=axins)
+    ax.indicate_inset([coord[0]-0.5, coord[1]-0.5, 1, 1],inset_ax=axins, 
+                        lw=2,edgecolor='r',facecolor='r', alpha=0.3, fill=False, zorder=5)
+
+def view_best(fit, meta, visualize, ax):
+    best_idx = np.unravel_index(np.nanargmax(fit), fit.shape)[::-1]
+    view_by_bin(best_idx, meta, visualize, ax)
+
+def view_solutions(fit, meta, visualize, p, plot_per_side=3, bin_list=None):
+    # Set inset plot positions and source solutions
+    x_pts, y_pts = (plot_per_side, plot_per_side)
+    
+    if plot_per_side == 4:
+        inset_size = 0.8
+        x_pos = 0.25+np.linspace(-1.5, 1.5, x_pts)
+        y_pos = 0.25+np.linspace(-1.5, 1.5, y_pts)
+        xx,yy = np.meshgrid(x_pos, y_pos)
+        plot_pos = np.c_[xx.flatten(),yy.flatten(), inset_size*np.ones(xx.flatten().shape), inset_size*np.ones(xx.flatten().shape)]
+        plot_pos*= 0.8
+
+    else:
+        inset_size = 1
+        x_pos = np.linspace(-1.5, 1.5, x_pts)*0.8
+        y_pos = np.linspace(-1.5, 1.5, y_pts)*0.8
+        xx,yy = np.meshgrid(x_pos, y_pos)
+        plot_pos = np.c_[xx.flatten(),yy.flatten(), inset_size*np.ones(xx.flatten().shape), inset_size*np.ones(xx.flatten().shape)]
+
+
+    # Default bins
+    if bin_list is None:
+        x_res, y_res = fit.shape
+        x_coord = np.round(np.linspace(0,x_res,x_pts+2)).astype(int)[1:-1]
+        y_coord = np.round(np.linspace(0,y_res,y_pts+2)).astype(int)[1:-1]
+
+        xx,yy = np.meshgrid(x_coord, y_coord)
+        nx2 = np.c_[xx.flatten(),yy.flatten()]
+        bin_list = list(zip(nx2[:,0], nx2[:,1]))
+        bin_list = [(b[0]+np.random.randint(4)-2,b[1]+np.random.randint(4)-2) for b in bin_list] # add some jitter
+
+    fig,ax = plt.subplots(figsize=(9,4),dpi=100)    
+    plot_map(fit, p, bin_ticks=True, ax=ax)
+    n_plots = x_pts*y_pts
+    for i in range(n_plots):
+        if (n_plots == 9 and i == 4) or (n_plots == 16 and np.any(i == np.array([5,6,9,10]))):
+            bin_list[i] = np.nan
+            pass    
+        else:        
+            view_by_bin(bin_list[i], meta, visualize, ax, inset_coord=plot_pos[i])
+
+    return bin_list
 
 # Numerical utilities
 def norm_pulse(pulse):
