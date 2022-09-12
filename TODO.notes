@@ -4,7 +4,7 @@ README:
 [√] Auto visualization
 [√] Designing domains
 [√] Experiments
-[ ] Result exploration
+[√] Result exploration
 
 
 VIS:
@@ -13,22 +13,19 @@ VIS:
 [√] Add max fitness to mean plots
 [√] Report improvement ad % of batch
     [√]  !!! NOT RIGHT !!!
-[ ] Jupyter notebook easy vis functions
+[√] Jupyter notebook easy vis functions
     [√] Single stats
         [√] Max fitness w/Mean
-        [ ] Magnify/inset last 15% 
     [√] Pulse
     [√] Itr records evaluations (or generations for pulse)
     [√] Replicates for single / multiple experiments
     [√] View Map    
-        [ ] Downsample (by fit / feature)
-        [ ] Vis individual / batch
-        [ ] Vis individuals in downsampled map
-[ ] Running vis
+        [√] Vis individual / batch
+[√] Running vis
     [√] Plots
     [√] Fitness Map
-    [√] Pulse 
-    [ ] Downsampled individuals
+    [√] Pulse
+
 [√] MPL Contexts for each chart
 [√] Set up includes installing contexts (https://github.com/garrettj403/SciencePlots/blob/master/setup.py)
 [ ] Reorganize Visualization Functions
@@ -53,6 +50,11 @@ Examples:
 [ ] CPPN [object]
 [ ] TO [custom init, jax?]
     
+Vis Archive:
+- Include interactive visualization functions in archive
+
+    
+
 Infra:
 [√] Version #, conda env cross platform
 [√] Pip/conda
