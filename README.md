@@ -2,6 +2,8 @@
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](./LICENSE) 
 
+![](assets/icon_1.png)
+
 # BBQ. A Tasty Front-End for PyRibs.
 
 * [Purpose](#purpose)
@@ -9,6 +11,7 @@
 * [Workflow](#workflow)
 * [Problem Domains](#problem-domains)
 * [Configuration Files](#configuration-files)
+* [Visualization](#visualization)
 
 ## Purpose
 BBQ is a collection of scripts designed to reduce the amount of boilerplate needed for setting up new MAP-Elites domains with the PyRibs library without extensive knowledge of PyRibs or MAP-Elites. The core of BBQ is:
@@ -18,6 +21,9 @@ BBQ is a collection of scripts designed to reduce the amount of boilerplate need
 - **Visualization:** Visualization of key metrics is automatically performed during a run, and visualization functions are provided for more indepth exploration in notebooks. 
 
 ## Installation
+![](assets/icon_2.png)
+
+
 
 Supported Python versions are 3.6 or later. Just go in the base directory and:
 
@@ -36,6 +42,8 @@ A `log` directory should be created from this brief run filled with plots, metri
 
 ## Workflow
 
+![](assets/icon_3.png)
+
 This library provides some ready made recipes for MAP-Elites using the pyRibs library to test out ideas with minimal setup and boilerplate. To get started just:
 
 1. **Define Problem Domain**
@@ -47,8 +55,11 @@ This library provides some ready made recipes for MAP-Elites using the pyRibs li
 3. **Run MAP-Elites** 
    - ```archive = map_elites(domain, p, logger)```
    - Takes problem `domain` a hyperparameter dict `p`, and a `logger` that handles the results.
+4. **Visualize Results** 
+   - A log file is created during a run that is populated with data and charts, replicates put each in a folder
+   - Notebook and functions are provided for [exploring single archives](notebooks/archive_exploration.ipynb), visualizing [summary results and comparing algorithms](notebooks/summary_results.ipynb)
 
-## Problem Domains
+### Problem Domains
 The simplest definition of domain can be created by defining only a fitness function and a descriptor function. This assumes that all genomes are 0-1 scaled to a predefined range. The output of the expressed genome is saved as metadata. To add other values to the metadata the inherited `evaluate` parent function will have to be rewritten.
 
 If the hyperparameter for `n_workers` equal 1 batch evaluation is done with a list comprehension, if greater than 1 a dask instance will be created and used to evaluate in parallel.
@@ -73,7 +84,7 @@ class Rastrigin(BbqDomain):
 ```
    
 
-## Configuration Files
+### Configuration Files
 
 To speed up running experiments, replicates, and tweaking hyperparameters all settings of an experiment are kept in a human readable configuration file and passed into the code. A sample configuration file looks like this:
 
@@ -141,3 +152,9 @@ emitters:
 
 Then run  ```python rast_test.py config/line_cma_mix.yaml```
 
+## Visualization
+![](assets/icon_4.png)
+
+
+- For single archives see [this notebook](notebooks/archive_exploration.ipynb)
+- To view summary results use [this notebook](notebooks/summary_results.ipynb)

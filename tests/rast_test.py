@@ -10,9 +10,9 @@ from bbq.examples.rastrigin import Rastrigin
 
 def rast_test(extra_config=None):
     # Load Configuration
-    exp_config  = '../config/x_smoke.yaml'
-    exp_config  = '../config/x_test.yaml'
     base_config = '../config/d_rast.yaml'
+    exp_config  = '../config/x_smoke.yaml'
+    #exp_config  = '../config/x_test.yaml'    
     config_list = [base_config, exp_config, extra_config]
     config_list = [i for i in config_list if i is not None]
     p = load_config(config_list) # Convert yaml files into parameter dictionary

@@ -1,68 +1,10 @@
-README:
-[√] Philosophy
-[√] Install and simple run
-[√] Auto visualization
-[√] Designing domains
-[√] Experiments
-[√] Result exploration
-
-
-VIS:
-[√] Science/Retro style
-[√] Grid numpy conversion function in logger not in archive
-[√] Add max fitness to mean plots
-[√] Report improvement ad % of batch
-    [√]  !!! NOT RIGHT !!!
-[√] Jupyter notebook easy vis functions
-    [√] Single stats
-        [√] Max fitness w/Mean
-    [√] Pulse
-    [√] Itr records evaluations (or generations for pulse)
-    [√] Replicates for single / multiple experiments
-    [√] View Map    
-        [√] Vis individual / batch
-[√] Running vis
-    [√] Plots
-    [√] Fitness Map
-    [√] Pulse
-
-[√] MPL Contexts for each chart
-[√] Set up includes installing contexts (https://github.com/garrettj403/SciencePlots/blob/master/setup.py)
-[ ] Reorganize Visualization Functions
-
-YAML:
-[√] create_config takes any number of yaml files
-[√] Archives defined in yaml file
-[√] is_object as yaml option
-    [√] toggle at init to avoid reclassing?
-
-Templates:
-[√] classes take arguments funneled in from p
-[√] BBQ base emitter multi-inheritance
-[√] BbqDomain -- n_workers == 1, or list batch eval
-
 Examples:
-[√] Rastrigin [list]
-[√] Arm [list]
-[√] Test file for all domains
---- stretch --
 [ ] Lander [dask]
 [ ] CPPN [object]
 [ ] TO [custom init, jax?]
     
 Vis Archive:
 - Include interactive visualization functions in archive
-
-    
-
-Infra:
-[√] Version #, conda env cross platform
-[√] Pip/conda
-[√] Fresh environment on both machines
-
-Catch up:
-[√] Update for pyribs 0.4.0
-[√] Update base archives to new version
 
 Pull/Feature Requests:
 [ ] Reflection or projection for bound constraints
