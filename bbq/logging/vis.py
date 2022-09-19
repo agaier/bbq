@@ -51,8 +51,6 @@ def plot_stats(data, p, vertical=False, ax=None):
         plt.setp(ax.flat, xlabel='Evaluations')
         for i in range(len(ax)):
             ax[i].xaxis.label.set_size(14)
-        
-    return ax
 
 def plot_pulse(pulse, p):
     stat = [norm_pulse(np.array(p)) for p in pulse]
@@ -198,8 +196,26 @@ def set_map_grid(ax, Z, bin_ticks=False, desc_bounds=0, grid_res=0, **_):
     ax.tick_params(direction="out", width=grid_thick, length=grid_thick*2)
     return ax
 
-#matplotlib.axes.Axes.inset_axes
-#matplotlib.axes.Axes.indicate_inset_zoom
+def view_map(Z, p, ax=None, bin_ticks=False):
+    if ax is None:
+        fig,ax = plt.subplots(figsize=(4,4),dpi=150)    
+    with plt.style.context('bbq_gridmap'):        
+        im = ax.imshow(Z, cmap='YlGnBu')
+
+        # Colorbar
+        divider = make_axes_locatable(ax)
+        cax = divider.append_axes("right", size="5%", pad=0.1)
+        cb = plt.colorbar(im, cax=cax)
+        for t in cb.ax.get_yticklabels():
+            t.set_horizontalalignment('right')   
+            t.set_x(3.0)
+
+        # Grid
+        set_map_grid(ax, Z, bin_ticks=bin_ticks, **p)
+        
+        ax.set(xlabel = p['desc_labels'][0], ylabel= p['desc_labels'][1])
+                
+    return ax
 
 def view_by_bin(coord, meta, visualize, ax, inset_coord=[1.5,0,1,1]):
     solution = meta[coord][0]

@@ -159,7 +159,7 @@ class RibsLogger():
 
     def plot_metrics(self):
         ''' Line plot of recorded metrics ''' 
-        fig, ax = plot_stats(self.metrics, self.p, vertical=True)
+        plot_stats(self.metrics, self.p, vertical=True)
         fname = str(self.log_dir / "LINE_Metrics.png")
         plt.savefig(fname,bbox_inches='tight')
         plt.clf(); plt.close()
