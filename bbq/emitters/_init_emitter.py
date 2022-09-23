@@ -8,7 +8,7 @@ emitter_lookup = {'Cma'    : Bbq_Cma,
                   'Object' : Bbq_Object
                   }
 
-def init_emitter(p, archive, start_xx=None):
+def init_emitter(p, archive, start_xx=None, emitter_lookup=emitter_lookup):
     "Intializes emitters from list of emitter configs"
     emitters = []
     for emitter in p['emitters']:

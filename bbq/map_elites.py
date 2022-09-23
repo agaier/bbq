@@ -3,10 +3,10 @@
 import time
 from ribs.optimizers import Optimizer
 from bbq.archives._init_archive import init_archive
-from bbq.emitters._init_emitter import init_emitter
+from bbq.emitters._init_emitter import init_emitter, emitter_lookup
 
 
-def map_elites(d, p, logger):
+def map_elites(d, p, logger, emitter_lookup=emitter_lookup):
     # - Setup -----------------------------------------------------------------#
     # : Initial solutions
     start_xx = d.init(p['n_init'])
@@ -15,7 +15,7 @@ def map_elites(d, p, logger):
 
     # : Setup emitters and archive
     archive = init_archive(p)
-    emitter = init_emitter(p, archive, start_xx)
+    emitter = init_emitter(p, archive, start_xx, emitter_lookup=emitter_lookup)
     opt = Optimizer(archive, emitter)                      
     archive.add_batch(start_xx, objs, descs, metas)
 
