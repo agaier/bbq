@@ -1,5 +1,7 @@
 .DS_Store
 
+bbq_bck
+
 # Dask files
 dask-worker-space/*
 *.lock
