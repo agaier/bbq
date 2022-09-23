@@ -218,7 +218,7 @@ def view_map(Z, p, ax=None, bin_ticks=False):
     return ax
 
 def view_by_bin(coord, meta, visualize, ax, inset_coord=[1.5,0,1,1]):
-    solution = meta[coord][0]
+    solution = meta[coord[::-1]][0]
     axins = ax.inset_axes(inset_coord)
     visualize(solution, ax=axins)
     ax.indicate_inset([coord[0]-0.5, coord[1]-0.5, 1, 1],inset_ax=axins, 
