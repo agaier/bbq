@@ -8,13 +8,12 @@ from bbq.utils import load_config
 from bbq.examples.rastrigin import Rastrigin
 
 
-def rast_test(extra_config=None):
+def rast_test(*extra_config, rep=0):
     # Load Configuration
-    base_config = '../config/d_rast.yaml'
-    exp_config  = '../config/x_smoke.yaml'
-    #exp_config  = '../config/x_test.yaml'    
-    config_list = [base_config, exp_config, extra_config]
-    config_list = [i for i in config_list if i is not None]
+    base_config = 'config/d_rast.yaml'
+    exp_config  = 'config/x_smoke.yaml'# ; exp_config  = '../config/x_test.yaml'   
+    print(f"|*******|\nREP: {rep}\nCFG: {extra_config}\n|*******|") 
+    config_list = [base_config] + [exp_config] + list(extra_config)
     p = load_config(config_list) # Convert yaml files into parameter dictionary
 
     logger = RibsLogger(p)                  # Logging and visualization
@@ -23,7 +22,5 @@ def rast_test(extra_config=None):
 
     print("Done")
 
-
 if __name__ == '__main__':
     fire.Fire(rast_test)
-    #fire.Fire(rast_test, 'config/line_cma_mix.yaml')
