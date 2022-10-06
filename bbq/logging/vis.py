@@ -56,6 +56,8 @@ def plot_pulse(pulse, p):
     stat = [norm_pulse(np.array(p)) for p in pulse]
     with plt.style.context(['bbq_line']):
         fig, ax = plt.subplots(ncols=len(p['emitters']))
+        if type(ax) is not np.ndarray:
+            ax = np.array([ax])
 
     event_label = ['Not Added', 'Improved', 'Discovered']
     for i, pulse in enumerate(stat):
