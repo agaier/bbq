@@ -23,7 +23,9 @@ BBQ is a collection of scripts designed to reduce the amount of boilerplate need
 ## Installation
 ![](assets/icon_2.png)
 
-
+**NOTE**: This is based on pyribs 0.4 -- the current version is 0.5. Many non-backwards compatibile bits have been added
+(renaming core parameters and such), and lot of functionality that is included here (batch addition, dumping archive) is
+now in core pyribs. It looks great! When I have time I will move this over and take advantage of all of their hard work.
 
 Supported Python versions are 3.6 or later. Just go in the base directory and:
 
