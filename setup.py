@@ -3,7 +3,6 @@ import glob
 import os
 import shutil
 
-import matplotlib
 from setuptools import find_packages, setup
 from setuptools.command.install import install
 
@@ -15,6 +14,8 @@ https://stackoverflow.com/questions/31559225/how-to-ship-or-distribute-a-matplot
 """
 
 def install_styles():
+    import matplotlib
+
     # Find all style files
     stylefiles = glob.glob('bbq/styles/*.mplstyle', recursive=True)
     # Find stylelib directory (where the *.mplstyle files go)
