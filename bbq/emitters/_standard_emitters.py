@@ -9,6 +9,8 @@ from ribs.emitters._emitter_base import EmitterBase
 import itertools
 from ribs.archives import AddStatus
 import numpy as np
+#from ribs.emitters.opt import CMAEvolutionStrategy
+from bbq.emitters._cma_es import CMAEvolutionStrategy # BBQ version with reflection
 
 
 class Bbq_Gauss(Bbq_Emitter, GaussianEmitter):
@@ -27,6 +29,12 @@ class Bbq_Cma(Bbq_Emitter, ImprovementEmitter):
         ImprovementEmitter.__init__(self, archive, x0, sigma0, selection_rule, 
                                       restart_rule, weight_rule, bounds, 
                                       batch_size, seed)
+        opt_seed = None if seed is None else self._rng.integers(10_000)
+        self.opt = CMAEvolutionStrategy(sigma0, batch_size, self._solution_dim,
+                                        weight_rule, opt_seed,
+                                        self.archive.dtype)  
+        self.opt.reset(self._x0)              
+        
         Bbq_Emitter.__init__(self, name)
 
     def tell(self, solutions, objective_values, behavior_values, metadata=None):
