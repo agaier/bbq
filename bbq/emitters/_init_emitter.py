@@ -9,10 +9,10 @@ emitter_lookup = {'Cma'    : Bbq_Cma,
                   }
 
 def init_emitter(p, archive, start_xx=None, emitter_lookup=emitter_lookup):
-    "Intializes emitters from list of emitter configs"
+    "Initializes emitters from list of emitter configs"
     emitters = []
     for emitter in p['emitters']:
-        emitter['bounds'] = [p['param_bounds']]*p['n_dof']
+        emitter['bounds'] = [p['param_bounds']]*p['n_params']
         emitter['x0'] = start_xx[np.random.randint(len(start_xx))]
         emitter_type = emitter_lookup[emitter['type']]
         emitters += [emitter_type(archive, **emitter)]

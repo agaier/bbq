@@ -4,6 +4,7 @@ from bbq.domains._parallel import create_dask_client, dask_eval
 
 # - Base Domains --------------------------------------------------------------#
 class BbqDomain():
+    #def __init__(self, n_params=1, n_workers=1, **_):
     def __init__(self, n_dof=1, n_workers=1, **_):
         self.n_dof = n_dof
         self.n_workers = n_workers
@@ -47,24 +48,26 @@ class BbqDomain():
         Returns:
             [NxM np_array]: Initial solutions
         """
-        initial_solutions = np.random.rand(n_solutions, self.n_dof)
+        initial_solutions = np.random.rand(n_solutions, self.n_params)
         return initial_solutions        
 
-    def prep_eval(self, **_):
+    def prep_eval(self, n_workers=1, **kwargs):
         """ Prepare evaluation if necessary: 
             - start up dask clients
             - set up file structures for external evaluators
             - or nothing, the results here will be used by batch eval
         """
-        if self.n_workers == 1:
+        if n_workers == 1:
             client = None
         else:
-            print(f"[*] Starting dask client with {self.n_workers} workers...")
-            client = create_dask_client(self.n_workers)
+            print(f"[*] Starting dask client with {n_workers} workers", end='...')
+            client = create_dask_client(n_workers)
+            print(f"done.")
+
         return client
 
     def batch_eval(self, xx, evaluator=None):
-        if self.n_workers == 1:
+        if evaluator == None:
             objs, descs, metas = zip(*[self.evaluate(x) for x in xx])
         else:
             objs, descs, metas = dask_eval(xx, self.evaluate, evaluator) 
