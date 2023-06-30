@@ -11,7 +11,7 @@ from ribs.visualize import cvt_archive_heatmap
 
 
 class RibsLogger():
-    def __init__(self, p, save_meta=False, copy_config=True, clear=True, rep=0, zip=False):
+    def __init__(self, p, save_meta=False, copy_config=True, clear=True, rep=0, zip=False, root_path=""):
         self.p = p
         self.save_meta = save_meta      
         self.zip = zip  
@@ -38,7 +38,7 @@ class RibsLogger():
             },              
         }       
         # Set log folders
-        self.log_dir = Path(f'log/{p["task_name"]}/{p["exp_name"]}/{rep}')
+        self.log_dir = Path(f'{root_path}/log/{p["task_name"]}/{p["exp_name"]}/{rep}')
         if clear:
             if self.log_dir.exists() and self.log_dir.is_dir():
                 shutil.rmtree(self.log_dir)
@@ -53,14 +53,15 @@ class RibsLogger():
     def final_log(self, domain, archive, itr, time):
         ''' Final log method, allows for final visualization/evaluation options '''
         self.log_metrics(domain, archive, itr, time, save_all=True)
-        self.zip_results()
+        if self.zip:
+            self.zip_results()
 
     def log_metrics(self, opt, d, itr, time, save_all=False):
         ''' Calls all logging and visualization functions '''
         archive = opt.archive
         emitter = opt.emitters
         self.update_metrics(archive, emitter, itr)
-        if (itr%self.p['print_rate'] == 0) or self.p['print_rate'] == 1:
+        if (itr==1 or itr%self.p['print_rate'] == 0) or self.p['print_rate'] == 1:
             n_evals = sum([emitter['batch_size'] for emitter in self.p['emitters']])
             self.print_metrics(archive, itr, n_evals, time)  
             with (self.log_dir / f"metrics.json").open("w") as file:
@@ -100,7 +101,7 @@ class RibsLogger():
         if archive.use_objects:
             genome_archive = np.full(np.r_[grid_res, 1], np.nan, dtype=object)
         else:
-            genome_archive = np.full(np.r_[grid_res, self.p['n_dof']], np.nan)
+            genome_archive = np.full(np.r_[grid_res, self.p['n_params']], np.nan)
         fit_archive    = np.full(np.r_[grid_res], np.nan)
         desc_archive   = np.full(np.r_[grid_res, n_beh], np.nan)
         meta_archive   = np.full(np.r_[grid_res, 1], np.nan, dtype=object)
@@ -170,7 +171,6 @@ class RibsLogger():
         fig,ax = plt.subplots(figsize=(4,4),dpi=150)
         if (archive_dict):
             ax = view_map(archive_dict['fit'], self.p['archive'], ax=ax)
-            ax.set_title("Fitness")
         else: # if it is a CVT archive, use pyribs default for now:
             cvt_archive_heatmap(archive, ax=ax, cmap='YlGnBu')
         fig.savefig(str(self.log_dir / f"MAP_Fitness.png"))

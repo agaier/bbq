@@ -214,8 +214,12 @@ def view_map(Z, p, ax=None, bin_ticks=False):
 
         # Grid
         set_map_grid(ax, Z, bin_ticks=bin_ticks, **p)
-        
         ax.set(xlabel = p['desc_labels'][0], ylabel= p['desc_labels'][1])
+        # Set title to fitness_labels if exists
+        if 'fitness_labels' in p.keys():
+            ax.set_title(p['fitness_labels'][0])
+        else:
+            ax.set_title("Fitness")
                 
     return ax
 
