@@ -69,6 +69,11 @@ class BBQArchiveBase(ArchiveBase):
         behavior_values = np.asarray(behavior_values)
         objective_value = self.dtype(objective_value)
 
+        # If any behavior value is nan, then skip this solution.
+        if np.isnan(behavior_values).any():
+            status = AddStatus.NOT_ADDED
+            return status, self.dtype(0.0)
+
         index = self.get_index(behavior_values)
         old_objective = self._objective_values[index]
         was_inserted, already_occupied = self.insert(
