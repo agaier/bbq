@@ -43,6 +43,7 @@ class RibsLogger():
             if self.log_dir.exists() and self.log_dir.is_dir():
                 shutil.rmtree(self.log_dir)
         self.log_dir.mkdir(parents=True,exist_ok=True)
+        print(f"Logging to {self.log_dir}")
 
         self.archive_dir = self.log_dir/'archive'
         self.archive_dir.mkdir(parents=True,exist_ok=True)
