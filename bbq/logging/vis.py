@@ -115,7 +115,7 @@ def plot_map(Z, p, ax=None, bin_ticks=False, n_colors=16, cmap='cividis'):
             t.set_x(3.0)
         # -- rid
         set_map_grid(ax, Z, bin_ticks=bin_ticks, **p)        
-        ax.set(xlabel = p['desc_labels'][0], ylabel= p['desc_labels'][1])                
+        ax.set(xlabel = p['desc_labels'][0], ylabel= p['desc_labels'][1])      
     return ax
 
 # Multiple Quantities
@@ -214,7 +214,9 @@ def view_map(Z, p, ax=None, bin_ticks=False):
 
         # Grid
         set_map_grid(ax, Z, bin_ticks=bin_ticks, **p)
-        ax.set(xlabel = p['desc_labels'][0], ylabel= p['desc_labels'][1])
+        ax.set(ylabel = p['desc_labels'][1], xlabel= p['desc_labels'][0])
+        ax.yaxis.set_label_coords(-0.1, 0.5)
+        ax.xaxis.set_label_coords(0.5, -0.1)
         # Set title to fitness_labels if exists
         if 'fitness_labels' in p.keys():
             ax.set_title(p['fitness_labels'][0])
@@ -229,6 +231,8 @@ def view_by_bin(coord, meta, visualize, ax, inset_coord=[1.5,0,1,1]):
     visualize(solution, ax=axins)
     ax.indicate_inset([coord[0]-0.5, coord[1]-0.5, 1, 1],inset_ax=axins, 
                         lw=2,edgecolor='r',facecolor='r', alpha=0.3, fill=False, zorder=5)
+    axins.axis('off')
+    
 
 def view_best(fit, meta, visualize, ax):
     best_idx = np.unravel_index(np.nanargmax(fit), fit.shape)[::-1]
@@ -239,7 +243,8 @@ def view_solutions(fit, meta, visualize, p, plot_per_side=3, bin_list=None):
     x_pts, y_pts = (plot_per_side, plot_per_side)
     
     if plot_per_side == 4:
-        inset_size = 0.8
+        #inset_size = 0.8
+        inset_size = 1.0
         x_pos = 0.25+np.linspace(-1.5, 1.5, x_pts)
         y_pos = 0.25+np.linspace(-1.5, 1.5, y_pts)
         xx,yy = np.meshgrid(x_pos, y_pos)

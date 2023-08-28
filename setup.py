@@ -5,11 +5,11 @@ import shutil
 
 from setuptools import find_packages, setup
 from setuptools.command.install import install
-
+import pkg_resources
 
 # --- Install style files for shart
 """
-This code is based on a StackOverflow answer:
+This code is based on a StackOverflow answer, then improved by ChatGPT:
 https://stackoverflow.com/questions/31559225/how-to-ship-or-distribute-a-matplotlib-stylesheet
 """
 
@@ -17,7 +17,7 @@ def install_styles():
     import matplotlib
 
     # Find all style files
-    stylefiles = glob.glob('bbq/styles/*.mplstyle', recursive=True)
+    stylefiles = pkg_resources.resource_listdir('bbq', 'styles')
     # Find stylelib directory (where the *.mplstyle files go)
     mpl_stylelib_dir = os.path.join(matplotlib.get_configdir(), "stylelib")
     if not os.path.exists(mpl_stylelib_dir):
@@ -25,15 +25,14 @@ def install_styles():
     # Copy files over
     print("Installing styles into", mpl_stylelib_dir)
     for stylefile in stylefiles:
-        print(os.path.basename(stylefile))
-        shutil.copy(
-            stylefile,
-            os.path.join(mpl_stylelib_dir, os.path.basename(stylefile)))
+        style_content = pkg_resources.resource_string('bbq', f'styles/{stylefile}')
+        with open(os.path.join(mpl_stylelib_dir, stylefile), 'wb') as f:
+            f.write(style_content)
 
 class PostInstallMoveFile(install):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        atexit.register(install_styles)
+    def run(self):
+        super().run()
+        install_styles()
 # --- 
 
 def read(fname):
@@ -51,7 +50,7 @@ setup(
 
     long_description=read('README.md'),
 
-    version="0.1.0",
+    version="0.1.1",
     
     url="https://github.com/agaier/bbq",
     
